@@ -51,7 +51,7 @@ margin-bottom: 0px
     background-color:rgba(74, 72, 126, 0);
 }
 .navbar-top-links  .open > a, .nav .open > a:hover, .nav .open > a:focus {
-    background-color: #75C5B8;
+    background-color: #576067;
 }
 .navbar-top-links > li > a {
 color: #FFFFFF;
@@ -60,7 +60,7 @@ color: #FFFFFF;
 padding: 20px 15px;
 }
 #side-menu {
-    background-color:#04B173;
+    background-color: #04B173;
 }
 
  #side-menu a {
@@ -114,15 +114,16 @@ margin-right: -24px;
     font-size:18px;
 }
 
+/*Cambie el color del login*/
 .body-Login-back {
-    background-color:#84B899;
+    background-color:#576067;
 }
 
 .margin-tips {
     margin:5px;
 }
 .navbar-default {
-border-color: #27A6BE;
+border-color: #576067;
 }
 /*media queries*/
 

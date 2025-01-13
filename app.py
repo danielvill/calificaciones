@@ -12,6 +12,10 @@ from reportlab.platypus import SimpleDocTemplate, Table, Paragraph, TableStyle, 
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet ,ParagraphStyle
 from routes.año import año
+from routes.estudiante import estudiante
+from routes.materia import materia
+from routes.almacenamiento import almacenamiento
+from routes.resultado import resultado
 
 
 db = dbase()
@@ -24,7 +28,7 @@ app.secret_key = 'calificaciones'
 # * Vista de Ingreso al sistema 
 @app.route('/',methods=['GET','POST'])
 def run():
-    return render_template('index.html')
+    return render_template('main.html')
 
 
 #* Este es para cerrar la sesion 
@@ -33,6 +37,7 @@ def logout():
     # Elimina el usuario de la sesión si está presente
     session.pop('username', None)
     return redirect(url_for('index'))
+
 
 
 
@@ -59,6 +64,17 @@ def index():
 # *Codigo de ingreso de usuarios
 app.register_blueprint(año)
 
+# * Codigo de ingreso de estudiantes
+app.register_blueprint(estudiante)
+
+# * Codigo de ingreso de materias
+app.register_blueprint(materia)
+
+# * Codigo de almacenamiento de resultados
+app.register_blueprint(resultado)
+
+# * Codigo de almacenamiento 
+app.register_blueprint(almacenamiento)
 
 
 

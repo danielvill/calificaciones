@@ -20,7 +20,7 @@ create table estudiante(
     cedula int(10),
     paralelo varchar(10),
     n_año varchar(50),-- se refiere a primer año 
-    clave varchar(100),-- para que pueda el estudiante tener donden ingresar
+    clave varchar(100),-- para que pueda el estudiante tener donde ingresar
 )
 
 create table resultado(
