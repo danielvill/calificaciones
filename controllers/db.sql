@@ -1,8 +1,7 @@
 create table año(
     id_año auto_increment primary key, 
     n_año varchar(50),-- por ejemplo  primero año depende el nombre que quieran ponerle 
-    a_numero int(20),
-    paralelo varchar(10),
+    paralelo varchar(10),-- los paralelos que se 
     fecha_creacion date,
 )-- se refiere esta tabla a los paralelos
 
@@ -18,7 +17,7 @@ create table estudiante(
     nombre varchar(100),
     apellido varchar(100),
     cedula int(10),
-    paralelo varchar(10),
+    paralelo varchar(10),-- esta relacionado con la tabla año
     n_año varchar(50),-- se refiere a primer año 
     clave varchar(100),-- para que pueda el estudiante tener donde ingresar
 )
@@ -30,7 +29,7 @@ create table resultado(
     n_año int(10),-- se refiere a primer año
     fecha_registro date,
     materias varchar(50),
-    nota int(10),--notas del estudiante
+    nota varchar(10),--notas del estudiante
 )
 
 create table almacenamiento(

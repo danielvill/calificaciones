@@ -1,6 +1,175 @@
 {% extends "admin/layout.html" %}
 {% block content %}
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <div class="triangulo"></div>
+        <h1 class="page-header"> Visualizar Estudiantes</h1>
+        <br>
+    </div>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="alert alert-danger">
+        {{ messages[0] }}
+    </div>
+    {% endif %}
+    {% endwith %}
+    <!--End Page Header -->
+    <div class="animate__animated animate__backInLeft">
+        <!-- /. ROW  -->
+        <table class="table table-bordered table-hover" id="myTable">
+            <thead>
+                <tr>
+                    <th>Nombre del estudiante</th>
+                    <th>Apellido del estudiante</th>
+                    <th>Cedula</th>
+                    <th>Paralelo</th>
+                    <th>Año lectivo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for estudiante in estudiante %}
+                <tr>
+                    <td>{{ estudiante.nombre }}</td>
+                    <td>{{ estudiante.apellido }}</td>
+                    <td>{{ estudiante.cedula }}</td>
+                    <td>{{ estudiante.paralelo }}</td>
+                    <td>{{ estudiante.n_año }}</td>
+                    <td>
+                        <button type="submit" class="editar btn btn-primary"
+                            style="background-color: #202020;color: white;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path
+                                    d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                <path fill-rule="evenodd"
+                                    d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                            </svg>
+                        </button>
+                        <a href="{{url_for('estudiante.delete_es', elies = estudiante.id_estudiante)}}"
+                            class="eliminar btn btn-danger" style="background-color: #C9302C;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
+                            </svg>
+                        </a>
+                    </td>
+                </tr>
+                </form>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 
 
 
+<div id="editModal" title="Editar Estudiantes">
+    
+    <form id="editForm" action="" method="post">
+        <div class="form-group">
+            <div class="col" hidden>
+                <label for="">id estudiante</label>
+                <input type="text" id="id_estudiante" name="id_estudiante" class="form-control  ">
+            </div>
+            <div class="col">
+                <label for="">Nombre</label>
+                <input type="text" id="nombre" name="nombre" class="form-control  animate__animated" >
+            </div>
+            <div class="col">
+                <label for="usuario">Apellido</label>
+                <input type="text" id="apellido" name="apellido" class="form-control entry animate__animated" >
+            </div>
+            <div class="col">
+                <label for="usuario">Paralelo</label>
+                <input type="text" id="paralelo" name="paralelo" class="form-control entry animate__animated" >
+            </div>
+            <div class="col">
+                <label for="usuario">Año lectivo</label>
+                <input type="text" id="n_año" name="n_año" class="form-control entry animate__animated" >
+            </div>
+            
+        </div>
+    </form>
+</div>
+
+<script>
+    document.querySelectorAll('.form-control').forEach(input => {
+        input.addEventListener('click', () => {
+            input.classList.add('animate__jello');
+            input.addEventListener('animationend', () => {
+                input.classList.remove('animate__jello');
+            }, { once: true });
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable({
+            "language": {
+                "url": "/static/assets/js/Spanish.json"
+            }
+        });
+        var table = $('#myTable').DataTable();
+        //Cambio de english a spanish
+        // Funcionalidad de edición
+        table.on('click', '.editar', function () {
+            var row = $(this).closest('tr');
+            var data = table.row(row).data();
+            // Aquí puedes abrir el modal y llenar los campos del formulario con los datos del usuario
+            // Por ejemplo:
+            $('#id_estudiante').val(data[0]);
+            $('#nombre').val(data[1]);
+            $('#apellido').val(data[2]);
+            $('#paralelo').val(data[3]);
+            $('#n_año').val(data[4]);
+            $('#editForm').attr('action', '/edit_es/' + data[0]); // Recuerda que en esta parte el 0 es la posicion selectora del codigo que estas usando en este caso es 0 ya que usas la cedula
+            $('#editModal').dialog('open');
+        });
+        // Inicializar el modal
+        $('#editModal').dialog({
+            autoOpen: false,
+            modal: true,
+            buttons: [
+                {
+                    text: 'Guardar',
+                    click: function () {
+                        $('#editForm').submit();
+                    },
+                    // Agregar una clase al botón
+                    class: 'guardar'
+                },
+                {
+                    text: 'Cancelar',
+                    click: function () {
+                        $(this).dialog('close');
+                    },
+                    // Agregar una clase al botón
+                    class: 'cancelar'
+                }
+            ]
+        });
+    });
+    $(".eliminar").click(function (event) {
+        event.preventDefault();
+        var url = $(this).attr('href'); // Guarda la URL del enlace
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "¿Estás seguro de que quieres eliminar?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar!',
+            cancelButtonText: 'No, cancelar!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url; // Navega a la URL del enlace
+            }
+        });
+    });
+</script>
 {% endblock %}

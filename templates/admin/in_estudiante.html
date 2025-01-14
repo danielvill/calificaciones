@@ -1,6 +1,85 @@
 {% extends "admin/layout.html" %}
 {% block content %}
+<style>
+    .col-lg-12 {
+        display: flex;
+        align-items: center;
+    }
 
+    .triangulo {
+        width: 0;
+        height: 0;
+        border-left: 20px solid transparent;
+        border-right: 20px solid transparent;
+        border-bottom: 40px solid green;
+        animation: girar 2s infinite linear;
+    }
+
+    @keyframes girar {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <div class="triangulo"></div>
+        <h1  class="page-header" >  Ingresar Estudiantes</h1>
+        <br>
+    </div>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="alert alert-danger">
+        {{ messages[0] }}
+    </div>
+    {% endif %}
+    {% endwith %}
+    <!--End Page Header -->
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <form action="/admin/in_estudiante" method="post">
+                        <div class="form-group has-success">
+                            <label class="control-label" for="inputSuccess">Nombre del estudiante</label>
+                            <input type="text" name="nombre" class="form-control" id="inputSuccess" required>
+                        </div>
+                        <div class="form-group has-success">
+                            <label class="control-label" for="inputSuccess">Apellido</label>
+                            <input type="text" name="apellido" class="form-control" id="inputSuccess" required>
+                        </div>
+                        <div class="form-group has-success">
+                            <label class="control-label" for="inputSuccess">Cedula</label>
+                            <input type="number" name="cedula" class="form-control" id="inputSuccess" required>
+                        </div>
+                        <div class="form-group has-success">
+                            <label class="control-label" for="inputSuccess">Paralelo</label>
+                            <select name="paralelo" id="" class="form-control" required>
+                                <option value="A">A</option>
+                            </select>
+                        </div>
+                        <div class="form-group has-success">
+                            <label class="control-label" for="inputSuccess">Seleccionar año lectivo</label>
+                            <select name="n_año" id="" class="form-control">
+                                <option value="Primero">Primero</option>
+                            </select>
+                        </div>
+                        <div class="form-group has-success">
+                            <label class="control-label" for="inputSuccess">Contraseña para el estudiante</label>
+                            <input type="password" name="clave" class="form-control" id="inputSuccess" required>
+                        </div>
+                        <button type="submit" class="btn btn-success">Enviar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 {% endblock %}

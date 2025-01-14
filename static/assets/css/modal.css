@@ -1,0 +1,35 @@
+#editModal {
+    background-color: #04B173;
+    color: white;
+    /* Este color es opcional, para cambiar el texto a blanco */
+    padding: 20px;
+    /* Este padding es opcional, para dar un poco de espacio dentro del modal */
+    border-radius: 10px;
+    /* Esta propiedad es opcional, para dar bordes redondeados */
+}
+
+.guardar {
+    background-color: green;
+    color: white;
+}
+
+.cancelar {
+    background-color: red;
+    color: white;
+}
+
+/* Cambiar el color de la "X" */
+.ui-dialog-titlebar-close {
+    color: red;
+    /* Cambia 'red' por el color que desees */
+    font-size: 20px;
+    /* Ajusta el tamaño si es necesario */
+    cursor: pointer;
+    /* Cambia el cursor al pasar sobre la "X" */
+}
+
+/* Agregar un fondo de color si es necesario */
+.ui-dialog-titlebar-close:hover {
+    background-color: #53A3A3;
+    /* Cambia el fondo al pasar el mouse por encima */
+}

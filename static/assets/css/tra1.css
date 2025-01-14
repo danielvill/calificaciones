@@ -1,0 +1,118 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  body {
+    height: 100vh;
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+            align-items: center;
+    overflow: hidden;
+    background: #5053A0;
+  }
+  
+  .rock {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 200px;
+    margin: 0;
+    color: #D4304B;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+    opacity: 0;
+    -webkit-animation: fadeblur 2s ease-in-out forwards;
+            animation: fadeblur 2s ease-in-out forwards;
+    -webkit-filter: blur(20px);
+            filter: blur(20px);
+  }
+  
+  .shirt {
+    position: relative;
+    width: 150px;
+    height: 180px;
+    background: #D4304B;
+    border-radius: 20px;
+    -webkit-animation: rockit .8s ease infinite alternate;
+            animation: rockit .8s ease infinite alternate;
+  }
+  
+  .sleeve {
+    position: absolute;
+    width: 50px;
+    height: 60px;
+    background: #D4304B;
+    border-radius: 10px;
+  }
+  
+  .sleeve-left {
+    left: -30px;
+    top: 40px;
+  }
+  
+  .sleeve-right {
+    right: -30px;
+    top: 40px;
+  }
+  
+  .collar {
+    position: absolute;
+    width: 100px;
+    height: 50px;
+    background: #D4304B;
+    top: -20px;
+    left: 25px;
+    border-radius: 50px 50px 0 0;
+  }
+  
+  @-webkit-keyframes rockit {
+    from {
+      -webkit-transform: translatey(30px) rotate(-45deg);
+              transform: translatey(30px) rotate(-45deg);
+    }
+    to {
+      -webkit-transform: translatey(30px) rotate(10deg);
+              transform: translatey(30px) rotate(10deg);
+    }
+  }
+  
+  @keyframes rockit {
+    from {
+      -webkit-transform: translatey(30px) rotate(-45deg);
+              transform: translatey(30px) rotate(-45deg);
+    }
+    to {
+      -webkit-transform: translatey(30px) rotate(10deg);
+              transform: translatey(30px) rotate(10deg);
+    }
+  }
+  
+  @-webkit-keyframes fadeblur {
+    0% {
+      opacity: 0;
+      -webkit-filter: blur(20px);
+              filter: blur(20px);
+    }
+    100% {
+      opacity: 1;
+      -webkit-filter: blur(0);
+              filter: blur(0);
+    }
+  }
+  
+  @keyframes fadeblur {
+    0% {
+      opacity: 0;
+      -webkit-filter: blur(20px);
+              filter: blur(20px);
+    }
+    100% {
+      opacity: 1;
+      -webkit-filter: blur(0);
+              filter: blur(0);
+    }
+  }

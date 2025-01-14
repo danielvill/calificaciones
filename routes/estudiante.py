@@ -6,8 +6,6 @@ db = dbase()
 estudiante = Blueprint('estudiante', __name__)
 
 
-
-
 # Este codigo es para lo que es el ID
 def get_next_sequence(name): 
     seq = db.seqs.find_one({'_id': name})
@@ -25,7 +23,7 @@ def get_next_sequence(name):
 
 
 # Ingresar Estudiante
-@estudiante.route("/admin/in_estudiante", methods=['POST'])
+@estudiante.route("/admin/in_estudiante", methods=['GET', 'POST'])
 def adestudiante():
     if 'username' not in session:
         flash("Inicia sesion con tu usuario y contraseña")
@@ -40,23 +38,26 @@ def adestudiante():
         n_año = request.form['n_año']
         clave = request.form['clave']
 
-        if nombre:
-            flash("Ya existe ese nombre")
-            return redirect(url_for('estudiante.adestudiante'))
-        elif apellido:
-            flash("Ya existe ese apellido")
-            return redirect(url_for('estudiante.adestudiante'))
-        elif cedula:
+        exist_cedula = estudiante.find_one ({"cedula":cedula})
+
+        if exist_cedula:
             flash("Ya existe esa cedula")
             return redirect(url_for('estudiante.adestudiante'))
         
         else:
             estudiante.insert_one(Estudiante(id_estudiante, nombre, apellido, cedula, paralelo, n_año, clave).EstudianteDBCollection())
             flash("Estudiante ingresado exitosamente")
-            return redirect(url_for('estudiante.adestudiante'))
+            return redirect(url_for('estudiante.transicion'))
     else:
         return render_template("admin/in_estudiante.html")
+# Animacion para transicion
+@estudiante.route('/transi')
+def transicion():
+    return render_template('transi/ad_estu.html')
 
+@estudiante.route('/estudiante/adestudiante')
+def ade():
+    return redirect(url_for('estudiante.adestudiante'))
 
 
 # * Editar Estudiante

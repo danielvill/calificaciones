@@ -24,7 +24,7 @@ def get_next_sequence(name):
     return result.get('seq')
 
 # Ingresar año lectivo
-@año.route("/admin/año", methods=['POST'])
+@año.route("/admin/in_año", methods=['GET', 'POST'])
 def adaño():
     if 'username' not in session:
         flash("Inicia sesion con tu usuario y contraseña")
@@ -33,26 +33,27 @@ def adaño():
         id_año = str(get_next_sequence('añoId')).zfill(1)
         año = db['año']
         n_año = request.form['n_año']
-        a_numero = request.form['a_numero']
         paralelo = request.form['paralelo']
         fecha_creacion = request.form['fecha_creacion']
 
-        if n_año:
-            flash("Ya existe ese año")
-            return redirect(url_for('año.adaño'))
-        elif a_numero:
-            flash("Ya existe ese nombre")
-            return redirect(url_for('año.adaño'))
-        elif paralelo:
-            flash("Ya existe ese paralelo")
-            return redirect(url_for('año.adaño'))
-        else:
-            año.insert_one(Año(id_año, n_año, a_numero, paralelo, fecha_creacion).AñoDBCollection())
-            flash("Año ingresado exitosamente")
-            return redirect(url_for('año.v_año'))
+        añi = Año(  id_año ,  n_año, paralelo, fecha_creacion)
+        año.insert_one(añi.AñoDBCollection())
+        flash("Año ingresado exitosamente")
+        return redirect(url_for('año.transicion'))
         
     else:
-        return render_template("admin/año.html")
+        return render_template("admin/in_año.html")
+
+# Animacion para transicion
+@año.route('/transicion')
+def transicion():
+    return render_template('admin/transicion.html')
+
+@año.route('/año/adaño')
+def adñ():
+    return redirect(url_for('año.adaño'))
+
+
 
 
 # Editar año 
@@ -60,12 +61,12 @@ def adaño():
 def edit_año(edad):
     año = db['año']
     n_año = request.form["n_año"]
-    a_numero = request.form["a_numero"]
+    
     paralelo = request.form['paralelo']
     fecha_creacion = request.form["fecha_creacion"]
     
-    if n_año and a_numero  and paralelo and fecha_creacion :
-        año.update_one({'id_año' : edad}, {'$set' : {'n_año' : n_año, 'a_numero' : a_numero, 'paralelo' : paralelo ,"fecha_creacion" :fecha_creacion }})
+    if n_año   and paralelo and fecha_creacion :
+        año.update_one({'id_año' : edad}, {'$set' : {'n_año' : n_año, 'paralelo' : paralelo ,"fecha_creacion" :fecha_creacion }})
         flash("Editado correctamente ")
         return redirect(url_for('año.v_año'))
     else:

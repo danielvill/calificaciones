@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Benjamin Carrion</title>
     <!-- Core CSS - Include with every page -->
+    <!-- CSS Files -->
     <link href="/static/assets/plugins/bootstrap/bootstrap.css" rel="stylesheet" />
     <link href="/static/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
     <link href="/static/assets/plugins/pace/pace-theme-big-counter.css" rel="stylesheet" />
@@ -32,8 +32,39 @@
     <script src="/static/assets/js/jquery-ui.js"></script>
     <!-- SELECT2 SCRIPTS -->
     <script src="/static/assets/js/select2.min.js"></script>
-</head>
 
+    <!-- Estos codigos son para que todo funcione como deberia ser -->
+
+    <link rel="stylesheet" href="/static/assets/css/select2.min.css">
+    <!-- DATATABLES STYLES -->
+    <link href="/static/assets/js/dataTables/dataTables.bootstrap.css" rel="stylesheet" />
+    
+    <!-- JavaScript Files -->
+    <link rel="stylesheet" href="/static/assets/css/modal.css">
+    <!-- JS -->
+    <!-- JQUERY SCRIPTS -->
+    <script src="/static/assets/js/jquery-1.10.2.js"></script>
+    <!-- JQUERY UI SCRIPTS -->
+    <script src="/static/assets/js/jquery-ui.js"></script>
+    <!-- SELECT2 SCRIPTS -->
+    <script src="/static/assets/js/select2.min.js"></script>
+    <!-- DATATABLES SCRIPTS -->
+    <script src="/static/assets/js/dataTables/jquery.dataTables.js"></script>
+    <script src="/static/assets/js/dataTables/dataTables.bootstrap.js"></script>
+    <!-- SWEETALERT SCRIPTS -->
+    <script src="/static/assets/js/sweetalert211.js"></script>
+    <!-- BOOTSTRAP SCRIPTS -->
+    <script src="/static/assets/js/bootstrap.js"></script>
+    <!-- METISMENU SCRIPTS -->
+    <script src="/static/assets/js/jquery.metisMenu.js"></script>
+    <!-- CUSTOM SCRIPTS -->
+    <script src="/static/assets/js/custom.js"></script>
+    <script src="/static/assets/js/timemensaje.js"></script>
+    <script src="/static/assets/js/sweetalert211.js"></script>
+
+
+    
+</head>
 <body>
     <!--  wrapper -->
     <div id="wrapper">
@@ -55,23 +86,29 @@
             </div>
             <!-- end navbar-header -->
             <!-- navbar-top-links -->
+            
             <ul class="nav navbar-top-links navbar-right">
                 <!-- main dropdown -->
                 <li class="dropdown animate__animated animate__bounce">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-user fa-3x"></i>
+                    <a  href="{{ url_for('logout') }}">
+                        <i class="fa fa-sign-out fa-3x"></i>
                     </a>
                     <!-- dropdown user-->
-                    <ul class="dropdown-menu dropdown-user ">
-
-                        <li class="divider"></li>
-                        <li><a href="{{ url_for('logout') }}"><i class="fa fa-sign-out fa-fw  "></i>Logout</a>
-                        </li>
-                    </ul>
                     <!-- end dropdown-user -->
                 </li>
                 <!-- end main dropdown -->
             </ul>
+            <ul class="nav navbar-top-links navbar-right">
+                <!-- main dropdown -->
+                <li class="dropdown animate__animated animate__bounce">
+                    <a  href="{{ url_for('logout') }}">
+                        <i class="fa fa-cloud fa-3x"></i>
+                    </a>
+                    <!-- dropdown user-->
+                    <!-- end dropdown-user -->
+                </li>
+                <!-- end main dropdown -->
+            </ul>   
             <!-- end navbar-top-links -->
         </nav>
         <!-- end navbar top -->
@@ -132,7 +169,7 @@
                         <a href="#"><i class="fa fa-files-o fa-fw"></i>Años lectivos<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="./in_años">Ingresar año lectivo</a>
+                                <a href="./in_año">Ingresar año lectivo</a>
                             </li>
                             <li>
                                 <a href="./año">Visualizar</a>
@@ -153,7 +190,7 @@
 
             {% endblock %}
 
-            
+
         </div>
         <!-- end page-wrapper -->
     </div>
