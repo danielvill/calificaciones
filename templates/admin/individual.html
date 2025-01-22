@@ -1,0 +1,192 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+<style>
+    body {
+        background-color: #e6f2ef;
+    }
+
+    .report-card {
+        background-color: #d6eae3;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px auto;
+        max-width: 800px;
+    }
+
+    .report-card h1 {
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .report-card .header,
+    .report-card .subjects {
+        margin-top: 20px;
+    }
+
+    .report-card .header div,
+    .report-card .subjects div {
+        margin-bottom: 10px;
+    }
+
+    .report-card .subjects .subject-row {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .report-card .subjects .subject-row div {
+        flex: 1;
+        text-align: center;
+    }
+</style>
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <div class="triangulo"></div>
+        <h1 class="page-header"> Visualizar Calificaciones Individuales</h1>
+        <br>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <label>Ingresa la cédula del estudiante</label>
+                    <form method="POST">
+                        <input type="text" class="form-control codigo" name="cedula" required >
+                        <br>
+
+                        <button type="submit" class="btn btn-primary">Mostrar</button>
+                    </form>
+                    <br>
+                    <button type="button" class="btn btn-success but1">Buscar Estudiante</button>
+                </div>
+            </div>
+
+            {% if datos %}
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="report-card">
+                        <h1>CALIFICACIONES</h1>
+                        <h2 class="text-center">ESCUELA PRIMARIA NO. 1234</h2>
+                        <div class="header">
+                            <div class="form-group row">
+                                <label for="studentName" class="col-sm-4 col-form-label">Cedula</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="studentName" value="{{ datos.cedula }}"
+                                        readonly>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="gradeGroup" class="col-sm-4 col-form-label">Nombre</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="gradeGroup" value="{{ datos.nombre }}" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="schoolDays" class="col-sm-4 col-form-label">Apellido:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="schoolDays"
+                                        value="{{ datos.apellido }}" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="attendance" class="col-sm-4 col-form-label">Paralelo:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="attendance"
+                                        value="{{ datos.paralelo }}" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="attendance" class="col-sm-4 col-form-label">Año lectivo:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="attendance" value="{{ datos.n_año }}" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="subjects">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>MATERIAS</th>
+                                        <th>1.º BIM</th>
+                                        <th>2.º BIM</th>
+                                        <th>3.º BIM</th>
+                                        <th>4.º BIM</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for materia in datos.materias %}
+                                    <tr>
+                                        <td>{{ materia.materia }}</td>
+                                        <td>{{ materia.nota }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+<div class="moseestudiante" hidden>
+    <table class="table table-bordered table-hover" id="myTable">
+        <thead>
+            <tr>
+                <th>Cedula</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Seleccionar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for estudiante in estudiante %}
+            <tr>
+                <td class="valor1">
+                    {{ estudiante.cedula }}
+                </td>
+                <td>
+                    {{ estudiante.nombre }}
+                </td>
+                <td>
+                    {{ estudiante.apellido }}
+                </td>
+                <td>
+                    <button type="button">Seleccionar</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<script>
+    $('#myTable').DataTable({
+        "language": {
+            "url": "/static/assets/js/Spanish.json"
+        }
+    });
+    $(document).ready(function () {
+        // Para el primer botón
+        $('.but1').click(function () {
+            $('.moseestudiante').dialog({
+                title: "Seleccionar Cliente",
+                width: 500,
+                modal: true
+            });
+        });
+    });
+    // Copia los datos de una celda para otra
+    $(document).ready(function () {
+        $('#myTable tbody').on('click', 'button', function () {
+            var row = $(this).closest('tr');
+            var codigo = $.trim(row.find('.valor1').text());
+
+            $('.codigo').val(codigo);
+
+        });
+    });
+</script>
+{% endblock %}

@@ -7,19 +7,23 @@
         <h1 class="page-header"> Visualizar materia</h1>
         <br>
     </div>
-    {% with messages = get_flashed_messages() %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-    <div class="alert alert-danger">
-        {{ messages[0] }}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}">
+        {{ message }}
     </div>
+    {% endfor %}
     {% endif %}
     {% endwith %}
+
     <!--End Page Header -->
     <div class="animate__animated animate__backInLeft">
         <!-- /. ROW  -->
         <table class="table table-bordered table-hover" id="myTable">
             <thead>
                 <tr>
+                    <th>Codigo materia</th>
                     <th>Nombre de Materia</th>
                     <th>Fecha de creacion</th>
                     <th>Acciones</th>
@@ -28,6 +32,7 @@
             <tbody>
                 {% for materia in materia %}
                 <tr>
+                    <td>{{ materia.id_materia }}</td>
                     <td>{{ materia.n_materia }}</td>
                     <td>{{ materia.fecha_creacion }}</td>
                     <td>
@@ -71,7 +76,7 @@
             </div>
             <div class="col">
                 <label for="usuario">Fecha en la que se creo</label>
-                <input type="text" id="fecha_creacion" name="fecha_creacion" class="form-control entry animate__animated" >
+                <input type="date" id="fecha_creacion" name="fecha_creacion" class="form-control entry animate__animated" >
             </div>
         </div>
     </form>
@@ -104,7 +109,7 @@
             $('#id_materia').val(data[0]);
             $('#n_materia').val(data[1]);
             $('#fecha_creacion').val(data[2]);
-            $('#editForm').attr('action', '/edit_año/' + data[0]); // Recuerda que en esta parte el 0 es la posicion selectora del codigo que estas usando en este caso es 0 ya que usas la cedula
+            $('#editForm').attr('action', '/edit_ma/' + data[0]); // Recuerda que en esta parte el 0 es la posicion selectora del codigo que estas usando en este caso es 0 ya que usas la cedula
             $('#editModal').dialog('open');
         });
         // Inicializar el modal

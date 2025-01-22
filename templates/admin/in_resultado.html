@@ -1,0 +1,213 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+<style>
+    .col-lg-12 {
+        display: flex;
+        align-items: center;
+    }
+
+    .triangulo {
+        width: 0;
+        height: 0;
+        border-left: 20px solid transparent;
+        border-right: 20px solid transparent;
+        border-bottom: 40px solid green;
+        animation: girar 2s infinite linear;
+    }
+
+    @keyframes girar {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <div class="triangulo"></div>
+        <h1 class="page-header"> Ingresar Calificaciones</h1>
+        <br>
+    </div>
+    <!--End Page Header -->
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <form action="/admin/in_resultado" method="post">
+                        <div class="form-group has-success"  hidden>
+                            <label class="control-label" for="inputSuccess">Cedula</label>
+                            <input type="text" name="cedula" class="form-control codigo" id="inputSuccess"
+                                readonly required>
+                        </div>
+                        <div class="form-group has-success">
+                            <label class="control-label" for="inputSuccess">Nombre del estudiante</label>
+                            <input type="text" name="nombre" class="form-control nombre" id="inputSuccess" readonly
+                                required>
+                        </div>
+                        <div class="form-group has-success">
+                            <label class="control-label" for="inputSuccess">Apellidos</label>
+                            <input type="text" name="apellido" class="form-control apellido" id="inputSuccess" readonly
+                                required>
+                        </div>
+                        <div class="form-group has-success">
+                            <label class="control-label" for="inputSuccess">Paralelo</label>
+                            <input type="text" name="paralelo" class="form-control paralelo" id="inputSuccess" readonly
+                                required>
+                        </div>
+                        <div class="form-group has-success">
+                            <label class="control-label" for="inputSuccess">Año en que se encuentra</label>
+                            <input type="text" name="n_año" class="form-control n_año" id="inputSuccess" readonly
+                                required>
+                        </div>
+                        <button type="button" class="but1  btn btn-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
+                                class="bi bi-person-vcard-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm9 1.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 0-1h-4a.5.5 0 0 0-.5.5M9 8a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 0-1h-4A.5.5 0 0 0 9 8m1 2.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 0-1h-3a.5.5 0 0 0-.5.5m-1 2C9 10.567 7.21 9 5 9c-2.086 0-3.8 1.398-3.984 3.181A1 1 0 0 0 2 13h6.96q.04-.245.04-.5M7 6a2 2 0 1 0-4 0 2 2 0 0 0 4 0" />
+                            </svg>
+                        </button>
+                        <br>
+                        <br>
+                        <div class="form-group has-success">
+                            <label class="control-label" for="inputSuccess">Fecha del ingreso</label>
+                            <input type="date" name="fecha_creacion" class="form-control" id="inputSuccess" required>
+                        </div>
+                        <div class="form-group has-success">
+                            <label class="control-label" for="inputSuccess">Materia</label>
+                            <select name="materias" id="materias" class="form-control" required>
+                                {% for materia in materia %}
+                                <option value="{{ materia.n_materia }}">{{ materia.n_materia }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group has-success">
+                            <label class="control-label" for="inputSuccess">Calificaciones</label>
+                            <select name="nota" id="nota" class="form-control" required>
+                                <option value="A">A</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B">B</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="C">C</option>
+                                <option value="C+">C+</option>
+                                <option value="C-">C-</option>
+                                <option value="D">D</option>
+                                <option value="D+">D+</option>
+                                <option value="D-">D-</option>
+                                <option value="F">F</option>
+                                <option value="F+">F+</option>
+                                <option value="F-">F-</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success">Enviar</button>
+                    </form>
+                    <br>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="moseestudiante" hidden>
+    <table class="table table-bordered table-hover" id="myTable">
+        <thead>
+            <tr>
+                <th>Cedula</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Paralelo</th>
+                <th>Año lectivo</th>
+                <th>Seleccionar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for estudiante in estudiante %}
+            <tr>
+                <td class="valor1">
+                    {{ estudiante.cedula }}
+                </td>
+                <td class="valor2">
+                    {{ estudiante.nombre }}
+                </td>
+                <td class="valor3">
+                    {{ estudiante.apellido }}
+                </td>
+                <td class="valor4">
+                    {{ estudiante.paralelo }}
+                </td>
+                <td class="valor5">
+                    {{ estudiante.n_año }}
+                </td>
+                <td>
+                    <button type="button">Seleccionar</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        $('select').select2();
+    });
+
+
+    $('#myTable').DataTable({
+        "language": {
+            "url": "/static/assets/js/Spanish.json"
+        }
+    });
+    $(document).ready(function () {
+        // Para el primer botón
+        $('.but1').click(function () {
+            $('.moseestudiante').dialog({
+                title: "Seleccionar Cliente",
+                width: 500,
+                modal: true
+            });
+        });
+
+
+    });
+
+    // Copia los datos de una celda para otra
+    $(document).ready(function () {
+        $('#myTable tbody').on('click', 'button', function () {
+            var row = $(this).closest('tr');
+            var codigo = $.trim(row.find('.valor1').text());
+            var nombre = $.trim(row.find('.valor2').text());
+            var apellido = $.trim(row.find('.valor3').text());
+            var paralelo = $.trim(row.find('.valor4').text());
+            var n_año = $.trim(row.find('.valor5').text());
+
+
+            $('.codigo').val(codigo);
+            $('.nombre').val(nombre);
+            $('.apellido').val(apellido);
+            $('.paralelo').val(paralelo);
+            $('.n_año').val(n_año);
+
+        });
+    });
+
+</script>
+
+<script src="/static/assets/js/validaciones/estudiante.js"></script>
+
+{% endblock %}

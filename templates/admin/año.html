@@ -7,19 +7,23 @@
         <h1 class="page-header"> Visualizar datos ingresados</h1>
         <br>
     </div>
-    {% with messages = get_flashed_messages() %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-    <div class="alert alert-danger">
-        {{ messages[0] }}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}">
+        {{ message }}
     </div>
+    {% endfor %}
     {% endif %}
     {% endwith %}
+
     <!--End Page Header -->
     <div class="animate__animated animate__backInLeft">
         <!-- /. ROW  -->
         <table class="table table-bordered table-hover" id="myTable">
             <thead>
                 <tr>
+                    <th>Codigo</th>
                     <th>Nombre del año del estudiante</th>
                     <th>Paralelo</th>
                     <th>Fecha de ingresado de los datos</th>
@@ -29,6 +33,7 @@
             <tbody>
                 {% for año in año %}
                 <tr>
+                    <td>{{ año.id_año }}</td>
                     <td>{{ año.n_año }}</td>
                     <td>{{ año.paralelo }}</td>
                     <td>{{ año.fecha_creacion }}</td>
@@ -43,8 +48,8 @@
                                     d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
                             </svg>
                         </button>
-                        <a href="{{url_for('año.delete_año', eliad = año.id_año)}}"
-                            class="eliminar btn btn-danger" style="background-color: #C9302C;">
+                        <a href="{{url_for('año.delete_año', eliad = año.id_año)}}" class="eliminar btn btn-danger"
+                            style="background-color: #C9302C;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-trash-fill" viewBox="0 0 16 16">
                                 <path
@@ -63,7 +68,7 @@
 
 
 <div id="editModal" title="Editar Año">
-    
+
     <form id="editForm" action="" method="post">
         <div class="form-group">
             <div class="col" hidden>
@@ -72,14 +77,13 @@
             </div>
             <div class="col">
                 <label for="">Nombre del año</label>
-                <input type="text" id="n_año" name="n_año" class="form-control  animate__animated" >
+                <input type="text" id="n_año" name="n_año" class="form-control  animate__animated">
             </div>
             <div class="col">
                 <label for="usuario">Paralelo</label>
-                <input type="text" id="paralelo" name="paralelo" class="form-control entry animate__animated" >
+                <input type="text" id="paralelo" name="paralelo" class="form-control entry animate__animated">
             </div>
-            <div class="col" 
-            >
+            <div class="col">
                 <label for="rol">Fecha de ingreado de los datos</label>
                 <input type="date" id="fecha_creacion" name="fecha_creacion" class="form-control  animate__animated">
             </div>

@@ -1,11 +1,13 @@
 class Resultado:
-    def __init__(self,id_resultado,nombre,apellido,n_año,fecha_registro,materias,nota):
+    def __init__(self,id_resultado,cedula,nombre,apellido,paralelo,n_año,fecha_creacion,materias,nota):
         
         self.id_resultado=id_resultado
+        self.cedula=cedula
         self.nombre=nombre
         self.apellido=apellido
+        self.paralelo=paralelo
         self.n_año=n_año
-        self.fecha_registro=fecha_registro
+        self.fecha_creacion=fecha_creacion
         self.materias=materias
         self.nota=nota
         
@@ -14,10 +16,12 @@ class Resultado:
     def ResultadoDBCollection(self):
         return{
             'id_resultado':self.id_resultado,
+            "cedula":self.cedula,
             'nombre':self.nombre,
             'apellido':self.apellido,
+            "paralelo":self.paralelo,
             'n_año':self.n_año,
-            'fecha_registro':self.fecha_registro,
+            'fecha_creacion':self.fecha_creacion,
             'materias':self.materias,
             'nota':self.nota
             

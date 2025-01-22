@@ -28,6 +28,8 @@ def adestudiante():
     if 'username' not in session:
         flash("Inicia sesion con tu usuario y contraseña")
         return redirect(url_for('estudiante.index'))
+    
+    
     if request.method == 'POST':
         id_estudiante = str(get_next_sequence('estudianteId')).zfill(1)
         estudiante = db['estudiante']
@@ -41,15 +43,15 @@ def adestudiante():
         exist_cedula = estudiante.find_one ({"cedula":cedula})
 
         if exist_cedula:
-            flash("Ya existe esa cedula")
+            flash("Ya existe esa cedula","danger")
             return redirect(url_for('estudiante.adestudiante'))
         
         else:
             estudiante.insert_one(Estudiante(id_estudiante, nombre, apellido, cedula, paralelo, n_año, clave).EstudianteDBCollection())
-            flash("Estudiante ingresado exitosamente")
+            flash("Estudiante ingresado exitosamente","success")
             return redirect(url_for('estudiante.transicion'))
     else:
-        return render_template("admin/in_estudiante.html")
+        return render_template("admin/in_estudiante.html" )
 # Animacion para transicion
 @estudiante.route('/transi')
 def transicion():
@@ -73,8 +75,8 @@ def edit_es(edies):
 
     if nombre and apellido and cedula and paralelo and n_año and clave:
         estudiante.update_one({"id_estudiante": edies}, {"$set": {"nombre": nombre, "apellido": apellido, "cedula": cedula, "paralelo": paralelo, "n_año": n_año, "clave": clave}})
-        flash("Estudiante editado correctamente")
-        return redirect(url_for('año.v_año'))
+        flash("Estudiante editado correctamente" ,"success")
+        return redirect(url_for('estudiante.v_estudiante'))
     else:
         return render_template("admin/in_estudiante.html")
 
@@ -88,8 +90,8 @@ def delete_es(elies):
     nombre = documento["nombre"]
     apellido = documento["apellido"]
     estudiante.delete_one({"id_estudiante":elies})
-    flash("Estudiante " + nombre + " "+ apellido  +  " eliminado correctamente") 
-    return redirect(url_for('año.v_año'))
+    flash("Estudiante " + nombre + " "+ apellido  +  " eliminado correctamente" ,"success") 
+    return redirect(url_for('estudiante.v_estudiante'))
 
 
 

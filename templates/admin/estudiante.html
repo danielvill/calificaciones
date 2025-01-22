@@ -7,35 +7,42 @@
         <h1 class="page-header"> Visualizar Estudiantes</h1>
         <br>
     </div>
-    {% with messages = get_flashed_messages() %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-    <div class="alert alert-danger">
-        {{ messages[0] }}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}">
+        {{ message }}
     </div>
+    {% endfor %}
     {% endif %}
     {% endwith %}
+
     <!--End Page Header -->
     <div class="animate__animated animate__backInLeft">
         <!-- /. ROW  -->
         <table class="table table-bordered table-hover" id="myTable">
             <thead>
                 <tr>
+                    <th>Codigo</th>
                     <th>Nombre del estudiante</th>
                     <th>Apellido del estudiante</th>
                     <th>Cedula</th>
                     <th>Paralelo</th>
                     <th>Año lectivo</th>
+                    <th hidden>Contraseña</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 {% for estudiante in estudiante %}
                 <tr>
+                    <td>{{ estudiante.id_estudiante }}</td>
                     <td>{{ estudiante.nombre }}</td>
                     <td>{{ estudiante.apellido }}</td>
                     <td>{{ estudiante.cedula }}</td>
                     <td>{{ estudiante.paralelo }}</td>
                     <td>{{ estudiante.n_año }}</td>
+                    <td hidden>{{ estudiante.clave }}</td>
                     <td>
                         <button type="submit" class="editar btn btn-primary"
                             style="background-color: #202020;color: white;">
@@ -67,7 +74,7 @@
 
 
 <div id="editModal" title="Editar Estudiantes">
-    
+
     <form id="editForm" action="" method="post">
         <div class="form-group">
             <div class="col" hidden>
@@ -76,21 +83,29 @@
             </div>
             <div class="col">
                 <label for="">Nombre</label>
-                <input type="text" id="nombre" name="nombre" class="form-control  animate__animated" >
+                <input type="text" id="nombre" name="nombre" class="form-control  animate__animated">
             </div>
             <div class="col">
                 <label for="usuario">Apellido</label>
-                <input type="text" id="apellido" name="apellido" class="form-control entry animate__animated" >
+                <input type="text" id="apellido" name="apellido" class="form-control entry animate__animated">
+            </div>
+            <div class="col" hidden>
+                <label for="usuario">Cedula</label>
+                <input type="text" id="cedula" name="cedula" class="form-control entry animate__animated">
             </div>
             <div class="col">
                 <label for="usuario">Paralelo</label>
-                <input type="text" id="paralelo" name="paralelo" class="form-control entry animate__animated" >
+                <input type="text" id="paralelo" name="paralelo" class="form-control entry animate__animated">
             </div>
             <div class="col">
                 <label for="usuario">Año lectivo</label>
-                <input type="text" id="n_año" name="n_año" class="form-control entry animate__animated" >
+                <input type="text" id="n_año" name="n_año" class="form-control entry animate__animated">
             </div>
-            
+            <div class="col" hidden>
+                <label for="usuario">Contraseña</label>
+                <input type="text" id="clave" name="clave" class="form-control entry animate__animated">
+            </div>
+
         </div>
     </form>
 </div>
@@ -124,8 +139,10 @@
             $('#id_estudiante').val(data[0]);
             $('#nombre').val(data[1]);
             $('#apellido').val(data[2]);
-            $('#paralelo').val(data[3]);
-            $('#n_año').val(data[4]);
+            $('#cedula').val(data[3]);
+            $('#paralelo').val(data[4]);
+            $('#n_año').val(data[5]);
+            $('#clave').val(data[6]);
             $('#editForm').attr('action', '/edit_es/' + data[0]); // Recuerda que en esta parte el 0 es la posicion selectora del codigo que estas usando en este caso es 0 ya que usas la cedula
             $('#editModal').dialog('open');
         });

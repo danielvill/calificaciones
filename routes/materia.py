@@ -37,11 +37,11 @@ def admateria():
         exist_materia = materia.find_one ({"n_materia":n_materia})
 
         if exist_materia:
-            flash("Ya existe esa materia")
+            flash("Ya existe esa materia","danger")
             return redirect(url_for('materia.admateria')) 
         else:
             materia.insert_one(Materia(id_materia, n_materia, fecha_creacion).MateriaDBCollection())
-            flash("Materia ingresada exitosamente")
+            flash("Materia ingresada exitosamente" ,"success")
             return redirect(url_for('materia.transicion'))
     else:
         return render_template("admin/in_materia.html")
@@ -59,15 +59,15 @@ def adma():
 
 
 # Editar Materia
-@materia.route('/edit_materia/<string:edmate>', methods=['GET', 'POST'])
-def edit_ma(edimate):
+@materia.route('/edit_ma/<string:edmate>', methods=['GET', 'POST'])
+def edit_ma(edmate):
     materia = db['materia']
     n_materia = request.form['n_materia']
     fecha_creacion = request.form['fecha_creacion']
     
     if n_materia and fecha_creacion :
-        materia.update_one({'id_materia' : edimate}, {'$set' : {'n_materia' : n_materia, 'fecha_creacion' : fecha_creacion }})
-        flash("Editado correctamente ")
+        materia.update_one({'id_materia' : edmate}, {'$set' : {'n_materia' : n_materia, 'fecha_creacion' : fecha_creacion }})
+        flash("Editado correctamente ", "success")
         return redirect(url_for('materia.v_materia'))
     else:
         return render_template('admin/materia.html')
@@ -81,7 +81,7 @@ def delete_ma(elmate):
     documento = materia.find_one({"id_materia":elmate})
     n_materia = documento['n_materia']
     materia.delete_one({"id_materia":elmate})
-    flash("Materia "+ n_materia + " eliminada exitosamente")
+    flash("Materia "+ n_materia + " eliminada exitosamente", "success")
     return redirect(url_for('materia.v_materia'))
 
 

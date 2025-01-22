@@ -38,7 +38,7 @@ def adaño():
 
         añi = Año(  id_año ,  n_año, paralelo, fecha_creacion)
         año.insert_one(añi.AñoDBCollection())
-        flash("Año ingresado exitosamente")
+        flash("Año ingresado exitosamente" ,"success")
         return redirect(url_for('año.transicion'))
         
     else:
@@ -67,7 +67,7 @@ def edit_año(edad):
     
     if n_año   and paralelo and fecha_creacion :
         año.update_one({'id_año' : edad}, {'$set' : {'n_año' : n_año, 'paralelo' : paralelo ,"fecha_creacion" :fecha_creacion }})
-        flash("Editado correctamente ")
+        flash("Editado correctamente " ,"success")
         return redirect(url_for('año.v_año'))
     else:
         return render_template('admin/año.html')
@@ -77,10 +77,10 @@ def edit_año(edad):
 @año.route('/delete_año/<string:eliad>')
 def delete_año(eliad):
     año = db["año"]
-    documento =  año.find_one({"cedula":eliad})
+    documento =  año.find_one({"id_año":eliad})
     n_año = documento["n_año"]
     año.delete_one({"id_año":eliad})
-    flash("d" + n_año +  " eliminado correctamente") 
+    flash(  n_año +  " eliminado correctamente" ,"success") 
     return redirect(url_for('año.v_año'))
 
 
