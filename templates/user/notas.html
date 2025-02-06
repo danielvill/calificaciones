@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calificaciones</title>
+    <link href="/static/assets/plugins/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="/static/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="/static/assets/plugins/pace/pace-theme-big-counter.css" rel="stylesheet" />
+    <link href="/static/assets/css/style.css" rel="stylesheet" />
+    <link href="/static/assets/css/main-style.css" rel="stylesheet" />
+    <!-- JQUERY UI STYLES -->
+    <link rel="stylesheet" href="/static/assets/css/jquery-ui.css">
+    <!-- SELECT2 STYLES -->
+    <link rel="stylesheet" href="/static/assets/css/select2.min.css">
+    <!-- Page-Level CSS -->
+    <link href="/static/assets/plugins/morris/morris-0.4.3.min.css" rel="stylesheet" />
+    <!-- Animaciones  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="/static/assets/css/messegae.css">
+    <script src="/static/assets/plugins/jquery-1.10.2.js"></script>
+    <script src="/static/assets/plugins/bootstrap/bootstrap.min.js"></script>
+    <script src="/static/assets/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="/static/assets/plugins/pace/pace.js"></script>
+    <script src="/static/assets/scripts/siminta.js"></script>
+    <!-- Page-Level Plugin Scripts-->
+    <script src="/static/assets/plugins/morris/raphael-2.1.0.min.js"></script>
+    <script src="/static/assets/plugins/morris/morris.js"></script>
+    <script src="/static/assets/scripts/dashboard-demo.js"></script>
+    <!-- JQUERY UI SCRIPTS -->
+    <script src="/static/assets/js/jquery-ui.js"></script>
+    <!-- SELECT2 SCRIPTS -->
+    <script src="/static/assets/js/select2.min.js"></script>
+
+    <!-- Estos codigos son para que todo funcione como deberia ser -->
+
+    <link rel="stylesheet" href="/static/assets/css/select2.min.css">
+    <!-- DATATABLES STYLES -->
+    <link href="/static/assets/js/dataTables/dataTables.bootstrap.css" rel="stylesheet" />
+    
+
+    <!-- JavaScript Files -->
+    <link rel="stylesheet" href="/static/assets/css/modal.css">
+    <!-- JS -->
+    <!-- JQUERY SCRIPTS -->
+    <script src="/static/assets/js/jquery-1.10.2.js"></script>
+    <!-- JQUERY UI SCRIPTS -->
+    <script src="/static/assets/js/jquery-ui.js"></script>
+    <!-- SELECT2 SCRIPTS -->
+    <script src="/static/assets/js/select2.min.js"></script>
+    <!-- DATATABLES SCRIPTS -->
+    <script src="/static/assets/js/dataTables/jquery.dataTables.js"></script>
+    <script src="/static/assets/js/dataTables/dataTables.bootstrap.js"></script>
+    <!-- SWEETALERT SCRIPTS -->
+    <script src="/static/assets/js/sweetalert211.js"></script>
+    <!-- BOOTSTRAP SCRIPTS -->
+    <script src="/static/assets/js/bootstrap.js"></script>
+    <!-- METISMENU SCRIPTS -->
+    <script src="/static/assets/js/jquery.metisMenu.js"></script>
+    <!-- CUSTOM SCRIPTS -->
+    <script src="/static/assets/js/custom.js"></script>
+    <script src="/static/assets/js/timemensaje.js"></script>
+    <script src="/static/assets/js/sweetalert211.js"></script>
+
+    <style>
+        body {
+            background-color: #e6f2ef;
+        }
+    
+        .report-card {
+            background-color: #d6eae3;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px auto;
+            max-width: 800px;
+        }
+    
+        .report-card h1 {
+            text-align: center;
+            font-weight: bold;
+        }
+    
+        .report-card .header,
+        .report-card .subjects {
+            margin-top: 20px;
+        }
+    
+        .report-card .header div,
+        .report-card .subjects div {
+            margin-bottom: 10px;
+        }
+    
+        .report-card .subjects .subject-row {
+            display: flex;
+            justify-content: space-between;
+        }
+    
+        .report-card .subjects .subject-row div {
+            flex: 1;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="report-card">
+                <h1>CALIFICACIONES</h1>
+                <h2 class="text-center">ESCUELA PRIMARIA NO. 1234</h2>
+                <div class="header">
+                    <div class="form-group row">
+                        <label for="studentName" class="col-sm-4 col-form-label">Cedula</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="studentName" value="{{ datos[0].cedula }}"
+                                readonly>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="gradeGroup" class="col-sm-4 col-form-label">Nombre</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="gradeGroup" value="{{ datos[0].nombre }}"
+                                readonly>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="schoolDays" class="col-sm-4 col-form-label">Apellido:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="schoolDays" value="{{ datos[0].apellido }}"
+                                readonly>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="attendance" class="col-sm-4 col-form-label">Paralelo:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="attendance" value="{{ datos[0].paralelo }}"
+                                readonly>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="attendance" class="col-sm-4 col-form-label">Año lectivo:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="attendance" value="{{ datos[0].n_año }}"
+                                readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="subjects">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>MATERIAS</th>
+                                <th>1 Bimestre</th>
+                                <th>2 Bimestre</th>
+                                <th>3 Bimestre</th>
+                                <th>4 Bimestre</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for dato in datos %}
+                            <tr>
+                                <td>{{ dato.materia }}</td>
+                                <td>{% if dato.bimestre == '1 Bimestre' %}{{ dato.nota }}{% endif %}</td>
+                                <td>{% if dato.bimestre == '2 Bimestre' %}{{ dato.nota }}{% endif %}</td>
+                                <td>{% if dato.bimestre == '3 Bimestre' %}{{ dato.nota }}{% endif %}</td>
+                                <td>{% if dato.bimestre == '4 Bimestre' %}{{ dato.nota }}{% endif %}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <form action="/generate_pdf" method="get">
+                        <button type="submit" class="btn btn-primary">Generar PDF</button>
+                        <a href="/index" class="btn btn-primary">Regresar</a>
+                    </form>
+                               
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+        
+</body>
+</html>
+
+

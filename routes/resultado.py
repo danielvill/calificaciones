@@ -40,15 +40,15 @@ def adresultado():
         n_año = request.form['n_año']
         fecha_creacion = request.form['fecha_creacion']
         materias = request.form['materias']
+        bimestre = request.form ["bimestre"]
         nota = request.form['nota']
 
-        exist_materias = resultado.find_one ({"materias":materias,"nombre":nombre,"apellido":apellido})
-
+        exist_materias = resultado.find_one ({"materias":materias,"nombre":nombre,"apellido":apellido,"bimestre":bimestre })
         if exist_materias:
-            flash("Ese materia con ese nombre y apellido ya ha sido registrada" ,"danger") 
+            flash("Esa materia o ese bimestre con ese nombre y apellido ya ha sido registrada" ,"danger") 
             return redirect(url_for('resultado.adresultado'))
         else:
-            resultado.insert_one(Resultado(id_resultado, cedula, nombre, apellido,paralelo,n_año,fecha_creacion, materias, nota).ResultadoDBCollection())
+            resultado.insert_one(Resultado(id_resultado, cedula, nombre, apellido,paralelo,n_año,fecha_creacion, materias, bimestre,nota).ResultadoDBCollection())
             flash("Calificacion ingresada exitosamente","success")
             return redirect(url_for('resultado.transicion'))
     else:
@@ -77,10 +77,11 @@ def edit_re(edire):
     n_año = request.form["n_año"]
     fecha_creacion = request.form["fecha_creacion"]
     materias = request.form["materias"]
+    bimestre = request.form ["bimestre"]
     nota = request.form["nota"]
 
-    if cedula  and nombre and apellido and paralelo  and n_año  and fecha_creacion and materias and nota:
-        resultado.update_one ({"id_resultado":edire},{"$set":{"cedula":cedula,"nombre":nombre ,"apellido":apellido , "paralelo":paralelo, "n_año":n_año,  "fecha_creacion":fecha_creacion, "materias":materias, "nota":nota}})
+    if cedula  and nombre and apellido and paralelo  and n_año  and fecha_creacion and materias and bimestre  and nota:
+        resultado.update_one ({"id_resultado":edire},{"$set":{"cedula":cedula,"nombre":nombre ,"apellido":apellido , "paralelo":paralelo, "n_año":n_año,  "fecha_creacion":fecha_creacion, "materias":materias, "bimestre":bimestre,"nota":nota}})
         flash("Editado correctamente " ,"success")
         return redirect(url_for('resultado.v_resultado'))
     else:
@@ -121,23 +122,32 @@ def individual():
     if 'username' not in session:
         flash("Inicia sesión con tu usuario y contraseña")
         return redirect(url_for('resultado.index'))
-    
+        
     estudiante = db["estudiante"].find()
+    
     if request.method == 'POST':
         cedula = request.form.get('cedula')
         resultado = db['resultado'].find({"cedula": cedula})
-        
         datos = {}
+        
         for doc in resultado:
             datos["cedula"] = doc["cedula"]
             datos["nombre"] = doc["nombre"]
             datos["apellido"] = doc["apellido"]
             datos["paralelo"] = doc["paralelo"]
             datos["n_año"] = doc["n_año"]
+            
             if "materias" not in datos:
                 datos["materias"] = []
-            datos["materias"].append({"materia": doc["materias"], "nota": doc["nota"]})
+                
+            datos["materias"].append({
+                "materia": doc["materias"],
+                "nota": doc["nota"],
+                "bimestre": doc["bimestre"]  # Añadimos el bimestre aquí
+            })
 
-        return render_template("admin/individual.html", datos=datos,estudiante = estudiante)
-    
-    return render_template("admin/individual.html",estudiante = estudiante)
+        return render_template("admin/individual.html", datos=datos, estudiante=estudiante)
+
+    return render_template("admin/individual.html", estudiante=estudiante)
+
+

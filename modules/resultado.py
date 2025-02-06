@@ -1,5 +1,5 @@
 class Resultado:
-    def __init__(self,id_resultado,cedula,nombre,apellido,paralelo,n_año,fecha_creacion,materias,nota):
+    def __init__(self,id_resultado,cedula,nombre,apellido,paralelo,n_año,fecha_creacion,materias,bimestre,nota):
         
         self.id_resultado=id_resultado
         self.cedula=cedula
@@ -9,6 +9,7 @@ class Resultado:
         self.n_año=n_año
         self.fecha_creacion=fecha_creacion
         self.materias=materias
+        self.bimestre=bimestre
         self.nota=nota
         
         
@@ -23,6 +24,7 @@ class Resultado:
             'n_año':self.n_año,
             'fecha_creacion':self.fecha_creacion,
             'materias':self.materias,
+            'bimestre':self.bimestre,
             'nota':self.nota
             
         }

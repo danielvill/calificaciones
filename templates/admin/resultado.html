@@ -28,8 +28,9 @@
                     <th>Apellido</th>
                     <th>Paralelo</th>
                     <th>Año lectivo</th>
-                    <th>Fecha </th>
+                    <th hidden>Fecha </th>
                     <th>Materias</th>
+                    <th>Bimestre</th>
                     <th>Nota</th>
                     <th>Acciones</th>
                 </tr>
@@ -43,8 +44,9 @@
                     <td>{{ resultado.apellido }}</td>
                     <td>{{ resultado.paralelo }}</td>
                     <td>{{ resultado.n_año }}</td>
-                    <td>{{ resultado.fecha_creacion }}</td>
+                    <td hidden>{{ resultado.fecha_creacion }}</td>
                     <td>{{ resultado.materias }}</td>
+                    <td>{{ resultado.bimestre }}</td>
                     <td>{{ resultado.nota }}</td>
                     <td>
                         <button type="submit" class="editar btn btn-primary"
@@ -102,7 +104,7 @@
                 <input type="text" id="n_año" name="n_año" class="form-control  animate__animated">
             </div>
             
-            <div class="col" >
+            <div class="col" hidden>
                 <label for="rol">Fecha de registro</label>
                 <input type="date" id="fecha_creacion" name="fecha_creacion" class="form-control  animate__animated">
             </div>
@@ -110,6 +112,11 @@
             <div class="col"  >
                 <label for="rol">Materias</label>
                 <input type="text" id="materias" name="materias" class="form-control  animate__animated" readonly>
+                
+            </div>
+            <div class="col" hidden >
+                <label for="rol">Bimestre</label>
+                <input type="text" id="bimestre" name="bimestre" class="form-control  animate__animated" readonly>
                 
             </div>
             <br>
@@ -171,7 +178,8 @@
             $('#n_año').val(data[5]);
             $('#fecha_creacion').val(data[6]);
             $('#materias').val(data[7]);
-            $('#nota').val(data[8]);
+            $('#bimestre').val(data[8]);
+            $('#nota').val(data[9]);
             $('#editForm').attr('action', '/edit_re/' + data[0]); // Recuerda que en esta parte el 0 es la posicion selectora del codigo que estas usando en este caso es 0 ya que usas la cedula
             $('#editModal').dialog('open');
         });
