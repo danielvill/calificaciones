@@ -149,20 +149,22 @@
                         <thead>
                             <tr>
                                 <th>MATERIAS</th>
-                                <th>1 Bimestre</th>
-                                <th>2 Bimestre</th>
-                                <th>3 Bimestre</th>
-                                <th>4 Bimestre</th>
+                                <th>Profesor</th>
+                                <th>2 Trimestre</th>
+                                <th>1 Trimestre</th>
+                                <th>3 Trimestre</th>
+                                <th>4 Trimestre</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for dato in datos %}
                             <tr>
                                 <td>{{ dato.materia }}</td>
-                                <td>{% if dato.bimestre == '1 Bimestre' %}{{ dato.nota }}{% endif %}</td>
-                                <td>{% if dato.bimestre == '2 Bimestre' %}{{ dato.nota }}{% endif %}</td>
-                                <td>{% if dato.bimestre == '3 Bimestre' %}{{ dato.nota }}{% endif %}</td>
-                                <td>{% if dato.bimestre == '4 Bimestre' %}{{ dato.nota }}{% endif %}</td>
+                                <td>{{ dato.profesor }}</td>
+                                <td>{% if dato.bimestre == '1 Trimestre' %}{{ dato.nota }}{% endif %}</td>
+                                <td>{% if dato.bimestre == '2 Trimestre' %}{{ dato.nota }}{% endif %}</td>
+                                <td>{% if dato.bimestre == '3 Trimestre' %}{{ dato.nota }}{% endif %}</td>
+                                <td>{% if dato.bimestre == '4 Trimestre' %}{{ dato.nota }}{% endif %}</td>
                             </tr>
                             {% endfor %}
                         </tbody>

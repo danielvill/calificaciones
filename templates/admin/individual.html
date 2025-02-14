@@ -71,36 +71,31 @@
                             <div class="form-group row">
                                 <label for="studentName" class="col-sm-4 col-form-label">Cedula</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="studentName" value="{{ datos.cedula }}"
-                                        readonly>
+                                    <input type="text" class="form-control" id="studentName" value="{{ datos.cedula }}" readonly>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="gradeGroup" class="col-sm-4 col-form-label">Nombre</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="gradeGroup" value="{{ datos.nombre }}"
-                                        readonly>
+                                    <input type="text" class="form-control" id="gradeGroup" value="{{ datos.nombre }}" readonly>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="schoolDays" class="col-sm-4 col-form-label">Apellido:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="schoolDays" value="{{ datos.apellido }}"
-                                        readonly>
+                                    <input type="text" class="form-control" id="schoolDays" value="{{ datos.apellido }}" readonly>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="attendance" class="col-sm-4 col-form-label">Paralelo:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="attendance" value="{{ datos.paralelo }}"
-                                        readonly>
+                                    <input type="text" class="form-control" id="attendance" value="{{ datos.paralelo }}" readonly>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="attendance" class="col-sm-4 col-form-label">Año lectivo:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="attendance" value="{{ datos.n_año }}"
-                                        readonly>
+                                    <input type="text" class="form-control" id="attendance" value="{{ datos.n_año }}" readonly>
                                 </div>
                             </div>
                         </div>
@@ -109,20 +104,22 @@
                                 <thead>
                                     <tr>
                                         <th>MATERIAS</th>
-                                        <th>1 Bimestre</th>
-                                        <th>2 Bimestre</th>
-                                        <th>3 Bimestre</th>
-                                        <th>4 Bimestre</th>
+                                        <th>Profesor</th>
+                                        <th>1 Trimestre</th>
+                                        <th>2 Trimestre</th>
+                                        <th>3 Trimestre</th>
+                                        <th>4 Trimestre</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for materia in datos.materias %}
                                     <tr>
                                         <td>{{ materia.materia }}</td>
-                                        <td>{% if materia.bimestre == '1 Bimestre' %}{{ materia.nota }}{% endif %}</td>
-                                        <td>{% if materia.bimestre == '2 Bimestre' %}{{ materia.nota }}{% endif %}</td>
-                                        <td>{% if materia.bimestre == '3 Bimestre' %}{{ materia.nota }}{% endif %}</td>
-                                        <td>{% if materia.bimestre == '4 Bimestre' %}{{ materia.nota }}{% endif %}</td>
+                                        <td>{{ materia.profesor }}</td>
+                                        <td>{% if materia.bimestre == '1 Trimestre' %}{{ materia.nota }}{% endif %}</td>
+                                        <td>{% if materia.bimestre == '2 Trimestre' %}{{ materia.nota }}{% endif %}</td>
+                                        <td>{% if materia.bimestre == '3 Trimestre' %}{{ materia.nota }}{% endif %}</td>
+                                        <td>{% if materia.bimestre == '4 Trimestre' %}{{ materia.nota }}{% endif %}</td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
@@ -131,7 +128,7 @@
                     </div>
                 </div>
             </div>
-            {% endif %}
+        {% endif %}
         </div>
     </div>
 </div>

@@ -1,0 +1,416 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+<style>
+    .chat-container {
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 10px;
+        position: relative;
+        /* Añadido */
+    }
+
+    .questions {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    .question {
+        cursor: pointer;
+        padding: 10px;
+        border: 1px solid white;
+        border-radius: 5px;
+        text-align: center;
+        flex: 1;
+        margin: 0 5px;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .pagination button {
+        margin: 0 5px;
+    }
+
+    .chat-box {
+        border-radius: 5px;
+        padding: 10px;
+        height: 300px;
+        overflow-y: auto;
+        margin-bottom: 20px;
+    }
+
+    .input-group {
+        display: flex;
+        margin-bottom: 30px;
+    }
+
+    .input-group input {
+        flex: 1;
+        margin-right: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    .input-group button {
+        padding: 6px 6px;
+        border-radius: 5px;
+        border: none;
+        background-color: black;
+        color: white;
+        cursor: pointer;
+    }
+
+    .circle {
+        width: 50px;
+        height: 50px;
+        border: 5px solid white;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation: blink 1.5s infinite;
+    }
+
+    .col-lg-12 {
+        display: flex;
+        align-items: center;
+    }
+
+    .triangulo {
+        width: 0;
+        height: 0;
+        border-left: 20px solid transparent;
+        border-right: 20px solid transparent;
+        border-bottom: 40px solid green;
+        animation: girar 2s infinite linear;
+    }
+
+    @keyframes girar {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="triangulo"></div>
+        <h1 class="page-header">Pregunte lo que necesitas</h1>
+        <br>
+    </div>
+    <div class="animate__animated animate__backInLeft">
+        <div hidden class="circle" id="circle"></div>
+
+        <div class="chat-container">
+            <div class="chat-box" id="chat-box">
+                {% if estudiantes %}
+                <h2>Estudiantes:</h2>
+                <table class="table table-bordered table-hover" id="mytable">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Cedula</th>
+                            <th>Paralelo</th>
+                            <th>Año de estudio</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for estudiante in estudiantes %}
+                        <tr>
+                            <td>{{ estudiante.nombre }}</td>
+                            <td>{{ estudiante.apellido }}</td>
+                            <td>{{ estudiante.cedula }}</td>
+                            <td>{{ estudiante.paralelo }}</td>
+                            <td>{{ estudiante.n_año }}</td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+                {% endif %}
+                <!-- Mostrar datos de materias -->
+                {% if materias %}
+                <h2>Materias:</h2>
+                <table class="table table-bordered table-hover" id="mytable2">
+                    <thead>
+                        <tr>
+                            <th>Nombre de Materia</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for materia in materias %}
+                        <tr>
+                            <td>{{ materia.n_materia }}</td>
+                            <td>{{ materia.fecha_creacion}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+                <!-- Mostrar datos de profesores -->
+                {% if profesores %}
+                <h2>Profesores:</h2>
+
+                <table class="table table-bordered table-hover" id="mytable3">
+                    <thead>
+                        <tr>
+                            <th>Nombre del profesor</th>
+                            <th>Materias asignadas</th>
+                            <th>Paralelo</th>
+                            <th>Año de estudio</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for profesor in profesores %}
+                        <tr>
+                            <td>{{ profesor.nombre }}</td>
+                            <td>{{ profesor.n_materia}}</td>
+                            <td>{{ profesor.cursos }}</td>
+                            <td>{{ profesor.año }}</td>
+                            <td>{{ profesor.fecha_creacion }}</td>
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+                <!-- Mostrar datos de calificaciones -->
+                {% if calificaciones %}
+                <h2>Calificaciones:</h2>
+                <table class="table table-bordered table-hover" id="mytable4">
+                    <thead>
+                        <tr>
+                            <th>Nombre </th>
+                            <th>Apellido</th>
+                            <th>Cedula</th>
+                            <th>Paralelo</th>
+                            <th>Año de estudio</th>
+                            <th>Materias</th>
+                            <th>Trimestre</th>
+                            <th>Notas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for resultado in calificaciones %}
+                        <tr>
+                            <td>{{ resultado.nombre }}</td>
+                            <td>{{ resultado.apellido}}</td>
+                            <td>{{ resultado.cedula }}</td>
+                            <td>{{ resultado.paralelo }}</td>
+                            <td>{{ resultado.n_año }}</td>
+                            <td>{{ resultado.materias }}</td>
+                            <td>{{ resultado.bimestre }}</td>
+                            <td>{{ resultado.nota }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+                <!-- Mostrar datos de mayores -->
+                {% if mayores %}
+                <h2>Calificaciones Mayores que B:</h2>
+                <table class="table table-bordered table-hover" id="mytable5">
+                    <thead>
+                        <tr>
+                            <th>Nombre </th>
+                            <th>Apellido</th>
+                            <th>Cedula</th>
+                            <th>Paralelo</th>
+                            <th>Año de estudio</th>
+                            <th>Materias</th>
+                            <th>Trimestre</th>
+                            <th>Notas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for mayo in mayores %}
+                        <tr>
+                            <td>{{ mayo.nombre }}</td>
+                            <td>{{ mayo.apellido}}</td>
+                            <td>{{ mayo.cedula }}</td>
+                            <td>{{ mayo.paralelo }}</td>
+                            <td>{{ mayo.n_año }}</td>
+                            <td>{{ mayo.materias }}</td>
+                            <td>{{ mayo.bimestre }}</td>
+                            <td>{{ mayo.nota }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+                <!-- Mostrar datos de menores -->
+                {% if menores %}
+                <h2>Calificaciones menores que C:</h2>
+                <table class="table table-bordered table-hover" id="mytable6">
+                    <thead>
+                        <tr>
+                            <th>Nombre </th>
+                            <th>Apellido</th>
+                            <th>Cedula</th>
+                            <th>Paralelo</th>
+                            <th>Año de estudio</th>
+                            <th>Materias</th>
+                            <th>Trimestre</th>
+                            <th>Notas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for meno in menores %}
+                        <tr>
+                            <td>{{ meno.nombre }}</td>
+                            <td>{{ meno.apellido}}</td>
+                            <td>{{ meno.cedula }}</td>
+                            <td>{{ meno.paralelo }}</td>
+                            <td>{{ meno.n_año }}</td>
+                            <td>{{ meno.materias }}</td>
+                            <td>{{ meno.bimestre }}</td>
+                            <td>{{ meno.nota }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+            </div>
+            <br>
+            <br>
+            <div class="questions">
+                <div class="question" onclick="sendQuestion('muestra que hay en la tabla estudiantes')">Muestra la tabla
+                    estudiantes</div>
+                <div class="question" onclick="sendQuestion('muestra que hay en la tabla materias')">Muestra la tabla
+                    materias</div>
+                <div class="question" onclick="sendQuestion('muestra que hay en la tabla profesores')">Muestra la tabla
+                    profesores</div>
+                <div class="question" onclick="sendQuestion('muestra que hay en la tabla calificaciones')">
+                    Muestra la tabla calificaciones</div>
+                <div class="question" onclick="sendQuestion('muestra a los estudiantes con calificaciones mayores')">
+                    Muestra a los estudiantes con calificaciones mayores a B</div>
+                <div class="question" onclick="sendQuestion('muestra a los estudiantes con calificaciones menores')">
+                    Muestra las calificaciones menos a C</div>
+            </div>
+            <div class="pagination">
+                <button class="btn btn-secondary" onclick="changePage(1)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+                        <path
+                            d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z" />
+                    </svg>
+                </button>
+                <button class="btn btn-secondary" onclick="changePage(2)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+                        <path
+                            d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
+                    </svg>
+                </button>
+            </div>
+            <form action="/admin/chat" method="post" id="chat-form" hidden>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="chat-input" name="user_input"
+                        placeholder="Selecciona un mensaje de los cuadros..." readonly>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable({
+            "language": {
+                "url": "/static/assets/js/Spanish.json"
+            }
+        });
+        var table = $('#mytable').DataTable();
+        var table2 = $('#mytable2').DataTable();
+        var table3 = $('#mytable3').DataTable();
+        var table4 = $('#mytable4').DataTable();
+        var table5 = $('#mytable5').DataTable();
+        var table6 = $('#mytable6').DataTable();
+    });
+</script>
+<script>
+    // Definir las preguntas y la paginación
+    const questions = document.querySelectorAll('.question');
+    const questionsPerPage = 3;
+    let currentPage = 1;
+
+    // Función para mostrar las preguntas según la página actual
+    function showQuestions(page) {
+        const startIndex = (page - 1) * questionsPerPage;
+        const endIndex = startIndex + questionsPerPage;
+
+        questions.forEach((question, index) => {
+            if (index >= startIndex && index < endIndex) {
+                question.style.display = 'block';
+            } else {
+                question.style.display = 'none';
+            }
+        });
+    }
+
+    // Función para cambiar de página
+    function changePage(direction) {
+        if (direction === 1 && currentPage > 1) {
+            currentPage--;
+        } else if (direction === 2 && currentPage < Math.ceil(questions.length / questionsPerPage)) {
+            currentPage++;
+        }
+
+        showQuestions(currentPage);
+    }
+
+    // Mostrar las preguntas iniciales
+    showQuestions(currentPage);
+</script>
+<script>
+    function sendMessage() {
+        const input = document.getElementById('chat-input');
+        const message = input.value;
+        if (message.trim() !== "") {
+            const chatBox = document.getElementById('chat-box');
+            chatBox.innerHTML += `<div><strong>Tú:</strong> ${message}</div>`;
+            input.value = "";
+            chatBox.scrollTop = chatBox.scrollHeight;
+            hideCircle();
+
+            // Enviar el formulario automáticamente
+            document.getElementById('chat-form').submit();
+        }
+    }
+
+    function sendQuestion(question) {
+        const chatBox = document.getElementById('chat-box');
+        const chatInput = document.getElementById('chat-input');
+
+        // Añade la pregunta al chat
+        chatBox.innerHTML += `<div><strong>Pregunta:</strong> ${question}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // Coloca la pregunta en el input
+        chatInput.value = question;
+
+        hideCircle();
+
+        // Enviar el formulario automáticamente
+        document.getElementById('chat-form').submit();
+    }
+
+    function hideCircle() {
+        const circle = document.getElementById('circle');
+        circle.style.display = 'none';
+    }
+</script>
+{% endblock %}

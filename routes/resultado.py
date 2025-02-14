@@ -29,6 +29,7 @@ def adresultado():
         return redirect(url_for('resultado.index')) 
     estudiante = db['estudiante'].find()
     materia = db['materia'].find()
+    profesor = db['profesor'].find()
     if request.method == 'POST':
         id_resultado = str(get_next_sequence('resultadoId')).zfill(1)
         resultado = db['resultado']
@@ -41,6 +42,7 @@ def adresultado():
         fecha_creacion = request.form['fecha_creacion']
         materias = request.form['materias']
         bimestre = request.form ["bimestre"]
+        profesor = request.form["profesor"]
         nota = request.form['nota']
 
         exist_materias = resultado.find_one ({"materias":materias,"nombre":nombre,"apellido":apellido,"bimestre":bimestre })
@@ -48,11 +50,11 @@ def adresultado():
             flash("Esa materia o ese bimestre con ese nombre y apellido ya ha sido registrada" ,"danger") 
             return redirect(url_for('resultado.adresultado'))
         else:
-            resultado.insert_one(Resultado(id_resultado, cedula, nombre, apellido,paralelo,n_año,fecha_creacion, materias, bimestre,nota).ResultadoDBCollection())
+            resultado.insert_one(Resultado(id_resultado, cedula, nombre, apellido,paralelo,n_año,fecha_creacion, materias, bimestre,profesor,nota).ResultadoDBCollection())
             flash("Calificacion ingresada exitosamente","success")
             return redirect(url_for('resultado.transicion'))
     else:
-        return render_template("admin/in_resultado.html",estudiante = estudiante ,materia = materia)
+        return render_template("admin/in_resultado.html",estudiante = estudiante ,materia = materia , profesor = profesor)
 
 
 
@@ -143,7 +145,8 @@ def individual():
             datos["materias"].append({
                 "materia": doc["materias"],
                 "nota": doc["nota"],
-                "bimestre": doc["bimestre"]  # Añadimos el bimestre aquí
+                "bimestre": doc["bimestre"],
+                "profesor": doc["profesor"]    # Añadimos el bimestre aquí
             })
 
         return render_template("admin/individual.html", datos=datos, estudiante=estudiante)

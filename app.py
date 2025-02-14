@@ -16,6 +16,8 @@ from routes.estudiante import estudiante
 from routes.materia import materia
 from routes.almacenamiento import almacenamiento
 from routes.resultado import resultado
+from routes.chat import chat_bp
+from routes.profesores import profesores
 import io
 
 db = dbase()
@@ -83,6 +85,7 @@ def mostrar_notas():
             "n_año": resultado["n_año"],
             "fecha_creacion": resultado["fecha_creacion"],
             "materia": resultado["materias"],
+            "profesor": resultado["profesor"],
             "nota": resultado["nota"],
             "bimestre": resultado["bimestre"]
         })
@@ -108,41 +111,53 @@ def generate_pdf():
             "n_año": resultado["n_año"],
             "materia": resultado["materias"],
             "nota": resultado["nota"],
+            "profesor": resultado["profesor"],
             "bimestre": resultado["bimestre"]
         })
-        
+
     pdf_filename = f"{usuario}_notas.pdf"
     c = canvas.Canvas(pdf_filename, pagesize=letter)
     ancho, alto = letter
 
+    # Encabezado del PDF
+    c.setFont("Helvetica-Bold", 16)
     c.drawString(30, alto - 40, "CALIFICACIONES")
+    c.setFont("Helvetica", 12)
     c.drawString(30, alto - 60, "ESCUELA PRIMARIA NO. 1234")
-    c.drawString(30, alto - 80, f"Cedula: {datos[0]['cedula']}")
-    c.drawString(30, alto - 100, f"Nombre: {datos[0]['nombre']}")
-    c.drawString(30, alto - 120, f"Apellido: {datos[0]['apellido']}")
-    c.drawString(30, alto - 140, f"Paralelo: {datos[0]['paralelo']}")
-    c.drawString(30, alto - 160, f"Año lectivo: {datos[0]['n_año']}")
 
+    # Información del estudiante
+    c.drawString(30, alto - 90, f"Cedula: {datos[0]['cedula']}")
+    c.drawString(30, alto - 110, f"Nombre: {datos[0]['nombre']}")
+    c.drawString(30, alto - 130, f"Apellido: {datos[0]['apellido']}")
+    c.drawString(30, alto - 150, f"Paralelo: {datos[0]['paralelo']}")
+    c.drawString(30, alto - 170, f"Año lectivo: {datos[0]['n_año']}")
+
+    # Tabla de materias y notas
+    c.setFont("Helvetica-Bold", 12)
     c.drawString(30, alto - 200, "MATERIAS")
-    bimestres = ["1 Bimestre", "2 Bimestre", "3 Bimestre", "4 Bimestre"]
-    x_offset = 200
+    c.drawString(150, alto - 200, "PROFESOR")
+    bimestres = ["1 Trimestre", "2 Trimestre", "3 Trimestre", "4 Trimestre"]
+    x_offset = 300  # Posición inicial para los bimestres
     for bimestre in bimestres:
         c.drawString(x_offset, alto - 200, bimestre)
-        x_offset += 100
+        x_offset += 80  # Espacio entre columnas de bimestres
 
-    y_offset = alto - 220
+    # Datos de las materias
+    c.setFont("Helvetica", 10)
+    y_offset = alto - 220  # Posición inicial para los datos
     for dato in datos:
         c.drawString(30, y_offset, dato['materia'])
-        x_offset = 200
+        c.drawString(150, y_offset, dato['profesor'])
+        x_offset = 300  # Reiniciar posición para las notas
         for bimestre in bimestres:
             if dato['bimestre'] == bimestre:
                 c.drawString(x_offset, y_offset, str(dato['nota']))
-            x_offset += 100
-        y_offset -= 20
-    
+            x_offset += 100  # Espacio entre columnas de notas
+        y_offset -= 20  # Espacio entre filas
+
+    # Guardar y enviar el PDF
     c.save()
     return send_file(pdf_filename, as_attachment=True)
-
 
 # *Codigo de ingreso de usuarios
 app.register_blueprint(año)
@@ -159,6 +174,11 @@ app.register_blueprint(resultado)
 # * Codigo de almacenamiento 
 app.register_blueprint(almacenamiento)
 
+# Registrar el Blueprint
+app.register_blueprint(chat_bp)
+
+# Registrar el Blueprint
+app.register_blueprint(profesores)
 
 
 

@@ -1,0 +1,101 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+<style>
+    .col-lg-12 {
+        display: flex;
+        align-items: center;
+    }
+
+    .triangulo {
+        width: 0;
+        height: 0;
+        border-left: 20px solid transparent;
+        border-right: 20px solid transparent;
+        border-bottom: 40px solid green;
+        animation: girar 2s infinite linear;
+    }
+
+    @keyframes girar {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <div class="triangulo"></div>
+        <h1 class="page-header"> Ingresar Profesores</h1>
+        <br>
+    </div>
+    <!--End Page Header -->
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <form action="/admin/in_profesor" method="post">
+                        <input type="text" name="id_profe" hidden>
+                        <div class="form-group has-success">
+                            <label class="control-label" for="inputSuccess">Nombre del profesor</label>
+                            <input name="nombre" type="text" class="form-control" id="inputSuccess" required>
+                        </div>
+                        <div class="form-group has-success">
+                            <label class="control-label" for="inputSuccess">Materias asignadas</label>
+                            <select name="n_materia" class="form-control" required>
+                                {% for mat in materia %}
+                                <option value="{{ mat.n_materia }}">{{ mat.n_materia }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group has-success">
+                            <label class="control-label" for="inputSuccess">Paralelo asignado</label>
+                            <select name="cursos" id="cursos" class="form-control">
+                                <option value="Primer año">Primer año</option>
+                                <option value="Segundo año">Segundo año</option>
+                                <option value="Tercer año">Tercer año</option>
+                                <option value="Cuarto año">Cuarto año</option>
+                                <option value="Quinto año">Quinto año</option>
+                                <option value="Sexto año">Sexto año</option>
+                                <option value="Septimo año">Septimo año</option>
+                                <option value="Octavo año">Octavo año</option>
+                            </select>
+                        </div>
+                        <div class="form-group has-success">
+                            <label class="control-label" for="inputSuccess">Paralelo</label>
+                            <select name="año" id="" class="form-control" required>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                                <option value="F">F</option>
+                                <option value="G">G</option>
+                            </select>
+                        </div>
+                        <div class="form-group has-success">
+                            <label class="control-label" for="inputSuccess">Fecha de creacion</label>
+                            <input name="fecha_creacion" type="date" class="form-control" id="inputSuccess" required>
+                        </div>
+                        <button type="submit" class="btn btn-success">Enviar</button>
+                    </form>
+                    <br>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
