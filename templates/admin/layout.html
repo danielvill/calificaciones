@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,7 +40,7 @@
     <link rel="stylesheet" href="/static/assets/css/select2.min.css">
     <!-- DATATABLES STYLES -->
     <link href="/static/assets/js/dataTables/dataTables.bootstrap.css" rel="stylesheet" />
-    
+
 
     <!-- JavaScript Files -->
     <link rel="stylesheet" href="/static/assets/css/modal.css">
@@ -65,13 +66,15 @@
     <script src="/static/assets/js/sweetalert211.js"></script>
 
 
-    
+
 </head>
+
 <body>
     <!--  wrapper -->
     <div id="wrapper">
         <!-- navbar top -->
-        <nav class="navbar navbar-default navbar-fixed-top" role="navigation" id="navbar">
+        <nav style="background-color: white;" class="navbar navbar-default navbar-fixed-top" role="navigation"
+            id="navbar">
             <!-- navbar-header -->
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
@@ -81,18 +84,19 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand">
-                    <h1 style="color: white; " class="animate__animated animate__bounce">
+                    <h1 style="color: black; " class="animate__animated animate__bounce">
                         Modulo Profesores
                     </h1>
                 </a>
             </div>
             <!-- end navbar-header -->
             <!-- navbar-top-links -->
-            
+
             <ul class="nav navbar-top-links navbar-right">
                 <!-- main dropdown -->
                 <li class="dropdown animate__animated animate__bounce">
-                    <a  href="{{ url_for('logout') }}">
+
+                    <a style="color: black;" href="{{ url_for('logout') }}">
                         <i class="fa fa-sign-out fa-3x"></i>
                     </a>
                     <!-- dropdown user-->
@@ -100,17 +104,18 @@
                 </li>
                 <!-- end main dropdown -->
             </ul>
-            <ul class="nav navbar-top-links navbar-right">
-                <!-- main dropdown -->
-                <li class="dropdown animate__animated animate__bounce">
-                    <a  href="{{ url_for('logout') }}">
-                        <i class="fa fa-cloud fa-3x"></i>
-                    </a>
-                    <!-- dropdown user-->
-                    <!-- end dropdown-user -->
-                </li>
-                <!-- end main dropdown -->
-            </ul>   
+            <form id="backupForm" method="post" action="/crear_backup">
+                <ul class="nav navbar-top-links navbar-right">
+                    <!-- main dropdown -->
+                    <li class="dropdown animate__animated animate__bounce">
+                        <a style="color: black;" href="javascript:void(0);" onclick="submitForm()">
+                            <i class="fa fa-cloud fa-3x"></i>
+                        </a>
+            </form>
+            </li>
+            </ul>
+
+
             <!-- end navbar-top-links -->
         </nav>
         <!-- end navbar top -->
@@ -122,22 +127,22 @@
                 <ul class="nav" id="side-menu">
                     <li>
                         <!-- user image section-->
-                        <div class="user-section">
+                        <div class="user-section" style="background-color: white;">
                             <div class="user-section-inner">
-                                <img src="/static/assets/img/user.jpg" alt="">
+                                <img src="/static/assets/img/inicio.png" alt="">
                             </div>
                             <div class="user-info animate__animated animate__bounce">
-                                <div>Escuela
+                                <div>Escuela de educación basica
                                     <br>
-                                    <strong>Benjamin Mora</strong>
+                                    <strong>Cidudad de Arenillas</strong>
                                 </div>
 
                             </div>
                         </div>
                         <!--end user image section-->
                     </li>
-                    <li class="selected">
-                        <a href="./chat"><i class="fa fa-dashboard fa-fw"></i>Resumen</a>
+                    <li class="selected" style="background-color: white;">
+                        <a href="./chat" style="color: black;"><i class="fa fa-dashboard fa-fw"></i>Resumen</a>
                     </li>
                     <li>
                         <a href="#"><i class="fa fa fa-male fa-fw"></i>Profesores<span class="fa arrow"></span></a>
@@ -176,7 +181,8 @@
                         <!-- second-level-items -->
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa fa-calendar fa-fw"></i>Años lectivos<span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa fa-calendar fa-fw"></i>Años lectivos<span
+                                class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
                                 <a href="./in_año">Ingresar año lectivo</a>
@@ -188,16 +194,23 @@
                         <!-- second-level-items -->
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa fa-pencil fa-fw"></i>Calificaciones<span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa fa-pencil fa-fw"></i>Calificaciones<span
+                                class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
                                 <a href="./in_resultado">Ingresar Calificacion</a>
                             </li>
                             <li>
-                                <a href="./resultado">Visualizar Calificacion</a>
+                                <a href="./resultado">Visualizar Calificaciones</a>
                             </li>
                             <li>
-                                <a href="./individual">Visualizar Calificacion Individuales</a>
+                                <a href="./resultado">Ingresar Trabajos</a>
+                            </li>
+                            <li>
+                                <a href="./resultado">Visualizar Trabajos</a>
+                            </li>
+                            <li>
+                                <a href="./individual">Calificaciones Individuales</a>
                             </li>
                         </ul>
                         <!-- second-level-items -->
@@ -221,6 +234,11 @@
     </div>
     <!-- end wrapper -->
     <!-- Core Scripts - Include with every page -->
+    <script type="text/javascript">
+        function submitForm() {
+            document.getElementById('backupForm').submit();
+        }
+    </script>
 </body>
 
 </html>

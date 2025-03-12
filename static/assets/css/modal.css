@@ -1,5 +1,5 @@
 #editModal {
-    background-color: #04B173;
+    background-color: #0D3210;
     color: white;
     /* Este color es opcional, para cambiar el texto a blanco */
     padding: 20px;
@@ -30,6 +30,6 @@
 
 /* Agregar un fondo de color si es necesario */
 .ui-dialog-titlebar-close:hover {
-    background-color: #53A3A3;
+    background-color: #0D3210;
     /* Cambia el fondo al pasar el mouse por encima */
 }

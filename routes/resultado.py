@@ -105,8 +105,6 @@ def delete_re(elire):
 
 
 
-
-
 # Visualizar resultado
 @resultado.route("/admin/resultado")
 def v_resultado():
@@ -116,6 +114,7 @@ def v_resultado():
     resultado = db['resultado'].find()
     materia = db['materia'].find()
     return render_template("admin/resultado.html", resultado=resultado,materia = materia)
+
 
 # Visualizar individual
 

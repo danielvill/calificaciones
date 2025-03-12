@@ -18,14 +18,58 @@ from routes.almacenamiento import almacenamiento
 from routes.resultado import resultado
 from routes.chat import chat_bp
 from routes.profesores import profesores
+from routes.tareas import tareas
 import io
-
+import os
 db = dbase()
 app = Flask(__name__)
 app.secret_key = 'calificaciones'
 
 
+# * Crear Backup de la base de datos 
+@app.route('/crear_backup', methods=['POST'])
+def crear_backup():
+    # Obtén los datos de las colecciones 'estudiante', 'stock' y 'usuarios'
+    estudiante_data = db.estudiante.find({}, {'_id': 0})  # Excluye el campo '_id'
+    profesor_data = db.profesor.find({}, {'_id': 0})
+    resultado_data = db.resultado.find({}, {'_id': 0})
 
+    # Crea una carpeta para los respaldos (si no existe)
+    backup_folder = 'backups'
+    os.makedirs(backup_folder, exist_ok=True)
+
+    # Genera nombres de archivo con la fecha actual
+    fecha_actual = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+    estudiante_filename = f'{backup_folder}/estudiante_{fecha_actual}.json'
+    profesor_filename = f'{backup_folder}/profesor_{fecha_actual}.json'
+    resultado_filename = f'{backup_folder}/resultado_{fecha_actual}.json'
+
+    # Guarda los datos en archivos JSON
+    with open(estudiante_filename, 'w') as estudiante_file:
+        for empleado in estudiante_data:
+            json.dump(empleado, estudiante_file)
+            estudiante_file.write('\n')
+
+    with open(profesor_filename, 'w') as profesor_file:
+        for herramienta in profesor_data:
+            json.dump(herramienta, profesor_file)
+            profesor_file.write('\n')
+
+    with open(resultado_filename, 'w') as resultado_file:
+        for resultado in resultado_data:
+            json.dump(resultado, resultado_file)
+            resultado_file.write('\n')
+    return redirect(url_for('completo'))
+
+# * Vista de Ingreso al sistema 
+# Transiciones
+@app.route('/completo')
+def completo():
+    return render_template('/admin/completo.html')
+
+@app.route('/admin/completo')
+def adcomp():
+    return redirect(url_for('chat.chat'))
 
 # * Vista de Ingreso al sistema 
 @app.route('/',methods=['GET','POST'])
@@ -180,6 +224,9 @@ app.register_blueprint(chat_bp)
 # Registrar el Blueprint
 app.register_blueprint(profesores)
 
+
+# Registrar el Blueprint
+app.register_blueprint(tareas)
 
 
 @app.errorhandler(404)
