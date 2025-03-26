@@ -21,6 +21,7 @@ from routes.profesores import profesores
 from routes.tareas import tareas
 import io
 import os
+from collections import defaultdict
 db = dbase()
 app = Flask(__name__)
 app.secret_key = 'calificaciones'
@@ -109,7 +110,6 @@ def index():
     else:
         return render_template('index.html')
 
-
 @app.route('/user/notas', methods=['GET'])
 def mostrar_notas():
     if 'username' not in session:
@@ -117,24 +117,63 @@ def mostrar_notas():
         return redirect(url_for('index'))
     
     usuario = session['username']
+    cedula = request.form.get('cedula')
     resultados = db.resultado.find({"cedula": usuario})
-    datos = []
+    tareas = db['tareas'].find({"cedula": usuario})
 
-    for resultado in resultados:
-        datos.append({
-            "cedula": resultado["cedula"],
-            "nombre": resultado["nombre"],
-            "apellido": resultado["apellido"],
-            "paralelo": resultado["paralelo"],
-            "n_año": resultado["n_año"],
-            "fecha_creacion": resultado["fecha_creacion"],
-            "materia": resultado["materias"],
-            "profesor": resultado["profesor"],
-            "nota": resultado["nota"],
-            "bimestre": resultado["bimestre"]
-        })
+    # Agrupar notas por materia (como ya lo tienes)
+    materias = defaultdict(lambda: {
+        "profesor": "",
+        "notas": {
+            "1 Trimestre": "",
+            "2 Trimestre": "",
+            "3 Trimestre": "",
+            "4 Trimestre": ""
+        }
+    })
+    
+    for doc in resultados:
+        materia_nombre = doc["materias"]
+        materias[materia_nombre]["profesor"] = doc["profesor"]
+        materias[materia_nombre]["notas"][doc["bimestre"]] = doc["nota"]
+    
+    # Agrupar tareas por materia y tipo de deber
+    tareas_agrupadas = defaultdict(lambda: {
+        "profesor": "",
+        "notas": {
+            "1 Trimestre": "",
+            "2 Trimestre": "",
+            "3 Trimestre": "",
+            "4 Trimestre": ""
+        }
+    })
+    
+    for doc in tareas:
+        clave = f"{doc['materias']} - {doc['deber']}"  # Agrupa por materia y tipo de deber
+        tareas_agrupadas[clave]["profesor"] = doc["profesor"]
+        tareas_agrupadas[clave]["notas"][doc["bimestre"]] = doc["nota"]
+    
+    # Convertir el defaultdict a un diccionario normal para pasarlo a la plantilla
+    datos = {
+        "cedula": cedula,
+        "nombre": doc["nombre"],
+        "apellido": doc["apellido"],
+        "paralelo": doc["paralelo"],
+        "n_año": doc["n_año"],
+        "materias": materias
+    }
+    
+    # Procesar tareas agrupadas
+    datos2 = {
+        "cedula": cedula,
+        "nombre": doc["nombre"],
+        "apellido": doc["apellido"],
+        "paralelo": doc["paralelo"],
+        "n_año": doc["n_año"],
+        "materias2": tareas_agrupadas
+    }
 
-    return render_template('/user/notas.html', datos=datos)
+    return render_template('/user/notas.html', datos=datos, datos2=datos2)
 
 @app.route('/generate_pdf', methods=['GET'])
 def generate_pdf():

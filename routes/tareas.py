@@ -44,14 +44,9 @@ def adtarea():
         profesor = request.form["profesor"]
         nota = request.form['nota']
 
-        exist_materias = resultado.find_one ({"materias":materias,"nombre":nombre,"apellido":apellido,"bimestre":bimestre })
-        if exist_materias:
-            flash("Esa materia o ese bimestre con ese nombre y apellido ya ha sido registrada" ,"danger") 
-            return redirect(url_for('tareas.adtarea'))
-        else:
-            resultado.insert_one(Tarea(id_resultado, cedula, nombre, apellido,paralelo,n_año,deber, materias, bimestre,profesor,nota).TareadoDBCollection())
-            flash("Calificacion ingresada exitosamente","success")
-            return redirect(url_for('tareas.transicion'))
+        resultado.insert_one(Tarea(id_resultado, cedula, nombre, apellido,paralelo,n_año,deber, materias, bimestre,profesor,nota).TareadoDBCollection())
+        flash("Calificacion ingresada exitosamente","success")
+        return redirect(url_for('tareas.transicion'))
     else:
         return render_template("admin/in_tarea.html",estudiante = estudiante ,materia = materia , profesor = profesor)
     
@@ -60,12 +55,12 @@ def adtarea():
 def transicion():
     return render_template('transi/ad_tarea.html')
 
-@tareas.route('/tareas/adtareas')
+@tareas.route('/tareas/adtarea')
 def adtar():
-    return redirect(url_for('tareas.adtareas'))
+    return redirect(url_for('tareas.adtarea'))
 
 # * Editar Resultado
-@tareas.route('/edit_ta/<string:edita>', methods=['GET', 'POST'])
+@tareas.route('/edit_ta/<string:edire>', methods=['GET', 'POST'])
 def edit_ta(edire):
     tarea = db["tareas"]
     cedula = request.form["cedula"]
@@ -98,11 +93,11 @@ def delete_ta(elita):
 
 
 # Visualizar tareas
-@tareas.route("/admin/tareas")
+@tareas.route("/admin/tarea")
 def v_tarea():
     if 'username' not in session:
         flash("Inicia sesion con tu usuario y contraseña")
         return redirect(url_for('tareas.index'))
-    tarea = db['tareas'].find()
+    tareas = db['tareas'].find()
     materia = db['materia'].find()
-    return render_template("admin/tarea.html", tarea=tarea,materia = materia)
+    return render_template("admin/tarea.html", tareas=tareas,materia = materia)

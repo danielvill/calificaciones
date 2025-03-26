@@ -36,18 +36,18 @@
                 </tr>
             </thead>
             <tbody>
-                {% for tarea in tarea %}
+                {% for tareas in tareas %}
                 <tr>
-                    <td hidden>{{ tarea.id_resultado }}</td>
-                    <td >{{ tarea.cedula }}</td>
-                    <td>{{ tarea.nombre }}</td>
-                    <td hidden>{{ tarea.apellido }}</td>
-                    <td>{{ tarea.paralelo }}</td>
-                    <td>{{ tarea.n_año }}</td>
-                    <td >{{ tarea.deber }}</td>
-                    <td>{{ tarea.materias }}</td>
-                    <td>{{ tarea.bimestre }}</td>
-                    <td>{{ tarea.nota }}</td>
+                    <td hidden>{{ tareas.id_resultado }}</td>
+                    <td >{{ tareas.cedula }}</td>
+                    <td>{{ tareas.nombre }}</td>
+                    <td hidden>{{ tareas.apellido }}</td>
+                    <td>{{ tareas.paralelo }}</td>
+                    <td>{{ tareas.n_año }}</td>
+                    <td >{{ tareas.deber }}</td>
+                    <td>{{ tareas.materias }}</td>
+                    <td>{{ tareas.bimestre }}</td>
+                    <td>{{ tareas.nota }}</td>
                     <td>
                         <button type="submit" class="editar btn btn-primary"
                             style="background-color: #202020;color: white;">
@@ -59,7 +59,7 @@
                                     d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
                             </svg>
                         </button>
-                        <a href="{{url_for('resultado.delete_re', elire = resultado.id_resultado)}}"
+                        <a href="{{url_for('tareas.delete_ta', elita = tareas.id_resultado)}}"
                             class="eliminar btn btn-danger" style="background-color: #C9302C;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-trash-fill" viewBox="0 0 16 16">
@@ -122,7 +122,6 @@
             <br>
             <div class="col">
                 <label for="rol">Notas</label>
-
                 <select name="nota" id="nota" class="form-control animate__animated" >
                     <option value="A">A</option>
                     <option value="A+">A+</option>
@@ -144,7 +143,6 @@
         </div>
     </form>
 </div>
-
 <script>
     document.querySelectorAll('.form-control').forEach(input => {
         input.addEventListener('click', () => {

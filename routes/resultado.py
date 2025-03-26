@@ -3,7 +3,7 @@ from controllers.database import Conexion as dbase
 from modules.resultado import Resultado
 from pymongo import MongoClient
 db = dbase()
-
+from collections import defaultdict
 resultado = Blueprint('resultado', __name__)
 
 
@@ -116,40 +116,74 @@ def v_resultado():
     return render_template("admin/resultado.html", resultado=resultado,materia = materia)
 
 
-# Visualizar individual
 
 @resultado.route("/admin/individual", methods=['GET', 'POST'])
 def individual():
+    
     if 'username' not in session:
         flash("Inicia sesión con tu usuario y contraseña")
         return redirect(url_for('resultado.index'))
         
     estudiante = db["estudiante"].find()
-    
+
     if request.method == 'POST':
         cedula = request.form.get('cedula')
         resultado = db['resultado'].find({"cedula": cedula})
-        datos = {}
+        tareas = db['tareas'].find({"cedula": cedula})
+        
+        # Agrupar notas por materia (como ya lo tienes)
+        materias = defaultdict(lambda: {
+            "profesor": "",
+            "notas": {
+                "1 Trimestre": "",
+                "2 Trimestre": "",
+                "3 Trimestre": "",
+                "4 Trimestre": ""
+            }
+        })
         
         for doc in resultado:
-            datos["cedula"] = doc["cedula"]
-            datos["nombre"] = doc["nombre"]
-            datos["apellido"] = doc["apellido"]
-            datos["paralelo"] = doc["paralelo"]
-            datos["n_año"] = doc["n_año"]
-            
-            if "materias" not in datos:
-                datos["materias"] = []
-                
-            datos["materias"].append({
-                "materia": doc["materias"],
-                "nota": doc["nota"],
-                "bimestre": doc["bimestre"],
-                "profesor": doc["profesor"]    # Añadimos el bimestre aquí
-            })
-
-        return render_template("admin/individual.html", datos=datos, estudiante=estudiante)
-
+            materia_nombre = doc["materias"]
+            materias[materia_nombre]["profesor"] = doc["profesor"]
+            materias[materia_nombre]["notas"][doc["bimestre"]] = doc["nota"]
+        
+        # Agrupar tareas por materia y tipo de deber
+        tareas_agrupadas = defaultdict(lambda: {
+            "profesor": "",
+            "notas": {
+                "1 Trimestre": "",
+                "2 Trimestre": "",
+                "3 Trimestre": "",
+                "4 Trimestre": ""
+            }
+        })
+        
+        for doc in tareas:
+            clave = f"{doc['materias']} - {doc['deber']}"  # Agrupa por materia y tipo de deber
+            tareas_agrupadas[clave]["profesor"] = doc["profesor"]
+            tareas_agrupadas[clave]["notas"][doc["bimestre"]] = doc["nota"]
+        
+        # Convertir el defaultdict a un diccionario normal para pasarlo a la plantilla
+        datos = {
+            "cedula": cedula,
+            "nombre": doc["nombre"],
+            "apellido": doc["apellido"],
+            "paralelo": doc["paralelo"],
+            "n_año": doc["n_año"],
+            "materias": materias
+        }
+        
+        # Procesar tareas agrupadas
+        datos2 = {
+            "cedula": cedula,
+            "nombre": doc["nombre"],
+            "apellido": doc["apellido"],
+            "paralelo": doc["paralelo"],
+            "n_año": doc["n_año"],
+            "materias2": tareas_agrupadas
+        }
+        
+        
+        return render_template("admin/individual.html", datos=datos, estudiante=estudiante, datos2=datos2)
+    
     return render_template("admin/individual.html", estudiante=estudiante)
-
-
