@@ -1,0 +1,59 @@
+{% extends "profesor/layout.html" %}
+{% block content %}
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <div class="triangulo"></div>
+        <h1 class="page-header">Estudiantes asignado</h1>
+        <br>
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <!--End Page Header -->
+    <div class="animate__animated animate__backInLeft">
+        <!-- /. ROW  -->
+        <table class="table table-bordered table-hover" id="myTable">
+            <thead>
+                <tr>
+                    <th>Codigo</th>
+                    <th>Nombre del estudiante</th>
+                    <th>Apellido del estudiante</th>
+                    <th>Cedula</th>
+                    <th>Paralelo</th>
+                    <th>Año lectivo</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for estudiante in estudiantes %}
+                <tr>
+                    <td>{{ estudiante.id_estudiante }}</td>
+                    <td>{{ estudiante.nombre }}</td>
+                    <td>{{ estudiante.apellido }}</td>
+                    <td>{{ estudiante.cedula }}</td>
+                    <td>{{ estudiante.paralelo }}</td>
+                    <td>{{ estudiante.n_año }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable({
+            "language": {
+                "url": "/static/assets/js/Spanish.json"
+            }
+        });
+        var table = $('#myTable').DataTable();
+    });
+</script>
+{% endblock %}

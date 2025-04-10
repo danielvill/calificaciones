@@ -19,6 +19,7 @@ from routes.resultado import resultado
 from routes.chat import chat_bp
 from routes.profesores import profesores
 from routes.tareas import tareas
+from routes.entrada import entrada
 import io
 import os
 from collections import defaultdict
@@ -98,12 +99,16 @@ def index():
         password = request.form['clave']
         usuario_fo = db.admin.find_one({'cedula':usuario,'clave':password})
         estudiante = db.estudiante.find_one({'cedula':usuario,'clave':password})
+        profesor = db.profesor.find_one({'cedula':usuario,'clave':password})
         if usuario_fo:
             session["username"]= usuario
             return redirect(url_for('año.v_año'))
         elif estudiante:
             session["username"]= usuario
             return redirect(url_for('mostrar_notas'))
+        elif profesor:
+            session["username"]= usuario
+            return redirect(url_for('profesores.v_proestudi'))
         else:
             flash("Contraseña incorrecta")
             return redirect(url_for('index'))
@@ -267,6 +272,8 @@ app.register_blueprint(profesores)
 # Registrar el Blueprint
 app.register_blueprint(tareas)
 
+# Registrar el Blueprint
+app.register_blueprint(entrada)
 
 @app.errorhandler(404)
 def notFound(error=None):

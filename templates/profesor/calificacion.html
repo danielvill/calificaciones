@@ -1,0 +1,188 @@
+{% extends "profesor/layout.html" %}
+{% block content %}
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <div class="triangulo"></div>
+        <h1 class="page-header"> Visualizar Trabajos</h1>
+        <br>
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <!--End Page Header -->
+    <div class="animate__animated animate__backInLeft">
+        <!-- /. ROW  -->
+        <table class="table table-bordered table-hover" id="myTable">
+            <thead>
+                <tr>
+                    <th hidden>Id registro</th>
+                    <th >Cedula</th>
+                    <th>Nombre</th>
+                    <th hidden>Apellido</th>
+                    <th>Paralelo</th>
+                    <th>Año lectivo</th>
+                    <th >Trabajo</th>
+                    <th>Materias</th>
+                    <th>Bimestre</th>
+                    <th>Nota</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tareas in tareas %}
+                <tr>
+                    <td hidden>{{ tareas.id_resultado }}</td>
+                    <td >{{ tareas.cedula }}</td>
+                    <td>{{ tareas.nombre }}</td>
+                    <td hidden>{{ tareas.apellido }}</td>
+                    <td>{{ tareas.paralelo }}</td>
+                    <td>{{ tareas.n_año }}</td>
+                    <td >{{ tareas.deber }}</td>
+                    <td>{{ tareas.materias }}</td>
+                    <td>{{ tareas.bimestre }}</td>
+                    <td>{{ tareas.nota }}</td>
+                    <td>
+                        <button type="submit" class="editar btn btn-primary"
+                            style="background-color: #202020;color: white;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path
+                                    d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                <path fill-rule="evenodd"
+                                    d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+                </form>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="editModal" title="Editar Deberes">
+    <form id="editForm" action="" method="post">
+        <div class="form-group">
+            <div class="col" hidden>
+                <label for="">Id resultado</label>
+                <input type="text" id="id_resultado" name="id_resultado" class="form-control  ">
+            </div>
+            <div class="col" >
+                <label for="">Cedula</label>
+                <input type="text" id="cedula" name="cedula" class="form-control  animate__animated" readonly>
+            </div>
+            <div class="col">
+                <label for="usuario">Nombre</label>
+                <input type="text" id="nombre" name="nombre" class="form-control entry animate__animated" readonly>
+            </div>
+            <div class="col" hidden>
+                <label for="rol">Apellido</label>
+                <input type="text" id="apellido" name="apellido" class="form-control  animate__animated" readonly>
+            </div>
+            <div class="col" hidden>
+                <label for="rol">Paralelo</label>
+                <input type="text" id="paralelo" name="paralelo" class="form-control  animate__animated" readonly>
+            </div>
+            
+            <div class="col" hidden>
+                <label for="rol">Año lectivo</label>
+                <input type="text" id="n_año" name="n_año" class="form-control  animate__animated">
+            </div>
+            
+            <div class="col" >
+                <label for="rol">Trabajos</label>
+                <input type="text" id="deber" name="deber" class="form-control  animate__animated" readonly>
+            </div>
+            <br>
+            <div class="col"  >
+                <label for="rol">Materias</label>
+                <input type="text" id="materias" name="materias" class="form-control  animate__animated" readonly>
+                
+            </div>
+            <div class="col" hidden >
+                <label for="rol">Bimestre</label>
+                <input type="text" id="bimestre" name="bimestre" class="form-control  animate__animated" readonly>
+                
+            </div>
+            <br>
+            <div class="col">
+                <label for="rol">Notas</label>
+                <input name="nota" id="nota" class="form-control animate__animated" >
+                    
+                </input>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    document.querySelectorAll('.form-control').forEach(input => {
+        input.addEventListener('click', () => {
+            input.classList.add('animate__jello');
+            input.addEventListener('animationend', () => {
+                input.classList.remove('animate__jello');
+            }, { once: true });
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable({
+            "language": {
+                "url": "/static/assets/js/Spanish.json"
+            }
+        });
+        var table = $('#myTable').DataTable();
+        //Cambio de english a spanish
+        // Funcionalidad de edición
+        table.on('click', '.editar', function () {
+            var row = $(this).closest('tr');
+            var data = table.row(row).data();
+            // Aquí puedes abrir el modal y llenar los campos del formulario con los datos del usuario
+            // Por ejemplo:
+            $('#id_resultado').val(data[0]);
+            $('#cedula').val(data[1]);
+            $('#nombre').val(data[2]);
+            $('#apellido').val(data[3]);
+            $('#paralelo').val(data[4]);
+            $('#n_año').val(data[5]);
+            $('#deber').val(data[6]);
+            $('#materias').val(data[7]);
+            $('#bimestre').val(data[8]);
+            $('#nota').val(data[9]);
+            $('#editForm').attr('action', '/edit_procali/' + data[0]); // Recuerda que en esta parte el 0 es la posicion selectora del codigo que estas usando en este caso es 0 ya que usas la cedula
+            $('#editModal').dialog('open');
+        });
+        // Inicializar el modal
+        $('#editModal').dialog({
+            autoOpen: false,
+            modal: true,
+            buttons: [
+                {
+                    text: 'Guardar',
+                    click: function () {
+                        $('#editForm').submit();
+                    },
+                    // Agregar una clase al botón
+                    class: 'guardar'
+                },
+                {
+                    text: 'Cancelar',
+                    click: function () {
+                        $(this).dialog('close');
+                    },
+                    // Agregar una clase al botón
+                    class: 'cancelar'
+                }
+            ]
+        });
+    });
+    
+</script>
+{% endblock %}

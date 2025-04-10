@@ -28,7 +28,7 @@
                     <th>Nombre de materia</th>
                     <th>Año asignado</th>
                     <th>Paralelo asignado</th>
-                    <th>Fecha de ingreso</th>
+                    <th>Cedula</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -40,7 +40,7 @@
                     <td>{{ profesores.n_materia }}</td>
                     <td>{{ profesores.cursos }}</td>
                     <td>{{ profesores.año }}</td>
-                    <td>{{ profesores.fecha_creacion }}</td>
+                    <td>{{ profesores.cedula }}</td>
                     <td>
                         <button type="submit" class="editar btn btn-primary"
                             style="background-color: #202020;color: white;">
@@ -116,8 +116,8 @@
                 </select>
             </div>
             <div class="col">
-                <label for="rol">Fecha de ingreso</label>
-                <input type="date" id="fecha_creacion" name="fecha_creacion" class="form-control  animate__animated">
+                <label for="rol">Cedula</label>
+                <input type="date" id="cedula" name="cedula" class="form-control  animate__animated">
             </div>
         </div>
     </form>
@@ -154,7 +154,7 @@
             $('#n_materia').val(data[2]);
             $('#cursos').val(data[3]);
             $('#año').val(data[4]);
-            $('#fecha_creacion').val(data[5]); 
+            $('#cedula').val(data[5]); 
             $('#editForm').attr('action', '/edit_profesor/' + data[0]); // Recuerda que en esta parte el 0 es la posicion selectora del codigo que estas usando en este caso es 0 ya que usas la cedula
             $('#editModal').dialog('open');
         });

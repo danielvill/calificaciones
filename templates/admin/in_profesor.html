@@ -77,9 +77,14 @@
                             </select>
                         </div>
                         <div class="form-group has-success">
-                            <label class="control-label" for="inputSuccess">Fecha de creacion</label>
-                            <input name="fecha_creacion" type="date" class="form-control" id="inputSuccess" required>
+                            <label class="control-label" for="inputSuccess">Cedula</label>
+                            <input name="cedula" type="number" class="form-control" id="inputSuccess" required>
                         </div>
+                        <div class="form-group has-success">
+                            <label class="control-label" for="inputSuccess">Contraseña</label>
+                            <input name="clave" type="password" class="form-control" id="inputSuccess" required>
+                        </div>
+                        
                         <button type="submit" class="btn btn-success">Enviar</button>
                     </form>
                     <br>
@@ -97,5 +102,4 @@
         </div>
     </div>
 </div>
-
 {% endblock %}

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benjamin Carrion</title>
+    <!-- Core CSS - Include with every page -->
+    <!-- CSS Files -->
+    <link href="/static/assets/plugins/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="/static/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="/static/assets/plugins/pace/pace-theme-big-counter.css" rel="stylesheet" />
+    <link href="/static/assets/css/style.css" rel="stylesheet" />
+    <link href="/static/assets/css/main-style.css" rel="stylesheet" />
+    <!-- JQUERY UI STYLES -->
+    <link rel="stylesheet" href="/static/assets/css/jquery-ui.css">
+    <!-- SELECT2 STYLES -->
+    <link rel="stylesheet" href="/static/assets/css/select2.min.css">
+    <!-- Page-Level CSS -->
+    <link href="/static/assets/plugins/morris/morris-0.4.3.min.css" rel="stylesheet" />
+    <!-- Animaciones  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="/static/assets/css/messegae.css">
+    <script src="/static/assets/plugins/jquery-1.10.2.js"></script>
+    <script src="/static/assets/plugins/bootstrap/bootstrap.min.js"></script>
+    <script src="/static/assets/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="/static/assets/plugins/pace/pace.js"></script>
+    <script src="/static/assets/scripts/siminta.js"></script>
+    <!-- Page-Level Plugin Scripts-->
+    <script src="/static/assets/plugins/morris/raphael-2.1.0.min.js"></script>
+    <script src="/static/assets/plugins/morris/morris.js"></script>
+    <script src="/static/assets/scripts/dashboard-demo.js"></script>
+    <!-- JQUERY UI SCRIPTS -->
+    <script src="/static/assets/js/jquery-ui.js"></script>
+    <!-- SELECT2 SCRIPTS -->
+    <script src="/static/assets/js/select2.min.js"></script>
+
+    <!-- Estos codigos son para que todo funcione como deberia ser -->
+
+    <link rel="stylesheet" href="/static/assets/css/select2.min.css">
+    <!-- DATATABLES STYLES -->
+    <link href="/static/assets/js/dataTables/dataTables.bootstrap.css" rel="stylesheet" />
+
+
+    <!-- JavaScript Files -->
+    <link rel="stylesheet" href="/static/assets/css/modal.css">
+    <!-- JS -->
+    <!-- JQUERY SCRIPTS -->
+    <script src="/static/assets/js/jquery-1.10.2.js"></script>
+    <!-- JQUERY UI SCRIPTS -->
+    <script src="/static/assets/js/jquery-ui.js"></script>
+    <!-- SELECT2 SCRIPTS -->
+    <script src="/static/assets/js/select2.min.js"></script>
+    <!-- DATATABLES SCRIPTS -->
+    <script src="/static/assets/js/dataTables/jquery.dataTables.js"></script>
+    <script src="/static/assets/js/dataTables/dataTables.bootstrap.js"></script>
+    <!-- SWEETALERT SCRIPTS -->
+    <script src="/static/assets/js/sweetalert211.js"></script>
+    <!-- BOOTSTRAP SCRIPTS -->
+    <script src="/static/assets/js/bootstrap.js"></script>
+    <!-- METISMENU SCRIPTS -->
+    <script src="/static/assets/js/jquery.metisMenu.js"></script>
+    <!-- CUSTOM SCRIPTS -->
+    <script src="/static/assets/js/custom.js"></script>
+    <script src="/static/assets/js/timemensaje.js"></script>
+    <script src="/static/assets/js/sweetalert211.js"></script>
+
+
+
+</head>
+
+<body>
+    <!--  wrapper -->
+    <div id="wrapper">
+        <!-- navbar top -->
+        <nav style="background-color: white;" class="navbar navbar-default navbar-fixed-top" role="navigation"
+            id="navbar">
+            <!-- navbar-header -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand">
+                    <h1 style="color: black; " class="animate__animated animate__bounce">
+                        Modulo Profesores
+                    </h1>
+                </a>
+            </div>
+            <!-- end navbar-header -->
+            <!-- navbar-top-links -->
+
+            <ul class="nav navbar-top-links navbar-right">
+                <!-- main dropdown -->
+                <li class="dropdown animate__animated animate__bounce">
+
+                    <a style="color: black;" href="{{ url_for('logout') }}">
+                        <i class="fa fa-sign-out fa-3x"></i>
+                    </a>
+                    <!-- dropdown user-->
+                    <!-- end dropdown-user -->
+                </li>
+                <!-- end main dropdown -->
+            </ul>
+            
+            </li>
+            </ul>
+
+
+            <!-- end navbar-top-links -->
+        </nav>
+        <!-- end navbar top -->
+        <!-- navbar side -->
+        <nav class="navbar-default navbar-static-side animate__animated animate__bounce" role="navigation">
+            <!-- sidebar-collapse -->
+            <div class="sidebar-collapse">
+                <!-- side-menu -->
+                <ul class="nav" id="side-menu">
+                    <li>
+                        <!-- user image section-->
+                        <div class="user-section" style="background-color: white;">
+                            <div class="user-section-inner">
+                                <img src="/static/assets/img/inicio.png" alt="">
+                            </div>
+                            <div class="user-info animate__animated animate__bounce">
+                                <div>Escuela de educación basica
+                                    <br>
+                                    <strong>Cidudad de Arenillas</strong>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!--end user image section-->
+                    </li>
+                    
+                    <li class="selected" style="background-color: white;">
+                        <a href="./in_entrada" style="color: black;"><i class="fa fa-dashboard fa-fw"></i>Entrada y salida</a>
+                    </li>
+
+                    <li>
+                        <a href="#"><i class="fa fa fa-users fa-fw"></i>Estudiantes<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="./estudiantes">Visualizar Estudiantes</a>
+                            </li>
+                        </ul>
+                        <!-- second-level-items -->
+                    </li>
+                    
+                    <li>
+                        <a href="#"><i class="fa fa fa-pencil fa-fw"></i>Calificaciones<span
+                                class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="./in_calificacion">Ingresar Trabajos</a>
+                            </li>
+                            <li>
+                                <a href="./calificacion">Visualizar Trabajos</a>
+                            </li>
+                            <li>
+                                <a href="./in_examen">Ingresar Examenes</a>
+                            </li>
+                            <li>
+                                <a href="./examen">Visualizar Examenes</a>
+                            </li>
+                        </ul>
+                        <!-- second-level-items -->
+                    </li>
+                </ul>
+                <!-- end side-menu -->
+            </div>
+            <!-- end sidebar-collapse -->
+        </nav>
+        <!-- end navbar side -->
+        <!--  page-wrapper -->
+        <div id="page-wrapper">
+
+            {% block content %}
+
+            {% endblock %}
+
+
+        </div>
+        <!-- end page-wrapper -->
+    </div>
+    <!-- end wrapper -->
+    <!-- Core Scripts - Include with every page -->
+    <script type="text/javascript">
+        function submitForm() {
+            document.getElementById('backupForm').submit();
+        }
+    </script>
+</body>
+
+</html>
