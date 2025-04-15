@@ -105,7 +105,7 @@
                             </div>
                         </div>
                         <div class="subjects">
-                            <table class="table table-bordered">
+                            <table class="table table-bordered" id="exam">
                                 <thead>
                                     <tr>
                                         <th>Examen</th>
@@ -115,7 +115,7 @@
                                         <th>3 Trimestre</th>
                                         <th>4 Trimestre</th>
                                         <th>Resultado</th>
-                                        <th>Nota</th>
+                                        <th>Letra</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -128,16 +128,16 @@
                                         <td>{{ materia_info.notas["3 Trimestre"] }}</td>
                                         <td>{{ materia_info.notas["4 Trimestre"] }}</td>
                                         <td class="examen"></td>
-                                        <td></td>
+                                        <td class="letra"></td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
                             </table>
                             <!-- Segunda tabla -->
-                            <table class="table table-bordered">
+                            <table class="table table-bordered" id="homework">
                                 <thead>
                                     <tr>
-                                        <th>Deberes</th>
+                                        <th>Trabajos</th>
                                         <th>Tipo</th>
                                         <th>Profesor</th>
                                         <th>1 Trimestre</th>
@@ -145,7 +145,7 @@
                                         <th>3 Trimestre</th>
                                         <th>4 Trimestre</th>
                                         <th>Resultado</th>
-                                        <th>Nota</th>
+                                        <th>Letra</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -159,8 +159,8 @@
                                         <td>{{ info.notas["2 Trimestre"] }}</td>
                                         <td>{{ info.notas["3 Trimestre"] }}</td>
                                         <td>{{ info.notas["4 Trimestre"] }}</td>
-                                        <td class="examen"></td>
-                                        <td></td>
+                                        <td class="deberes"></td>
+                                        <td class="letra"></td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
@@ -206,87 +206,136 @@
     </table>
 </div>
 <script>
-    // Mapeo de letras a sus valores numéricos
-    const letraValores = {
-        'A+': 100,
-        'A': 93,
-        'A-': 92,
-        "B+": 89,
-        "B": 83,
-        "B-": 82,
-        "C+": 77,
-        "C": 73,
-        "C-": 72,
-        "D+": 67,
-        "D": 60,
-        "D-": 59,
-        "F": 49,
-    };
 
-    // Función para calcular el promedio y mostrarlo
-    function calcularTotal() {
-        // Obtenemos todas las filas de la tabla
-        const filas = document.querySelectorAll('table tbody tr');
+    // Codigo para la tabla exam este codigo es para lo que es sacar el promedio de las calificaciones 
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let filas = document.querySelectorAll("#exam tbody tr");
 
         filas.forEach(fila => {
-            let suma = 0;
-            let count = 0;
+            let notas = [];
+            let celdas = fila.querySelectorAll("td");
 
-            // Obtenemos las celdas que tienen las notas (1, 2, 3, 4 Trimestre)
-            const celdasTrimestre = fila.querySelectorAll('td:nth-child(n+3):nth-child(-n+6)');
-
-            celdasTrimestre.forEach(celda => {
-                const nota = celda.textContent.trim();
-                if (letraValores[nota] !== undefined) {
-                    suma += letraValores[nota];
-                    count++;
+            for (let i = 2; i <= 5; i++) {  // Índices de las celdas con las notas
+                let valor = celdas[i].textContent.trim();
+                if (valor !== "") {  // Asegurar que la celda no esté vacía
+                    notas.push(parseFloat(valor));
                 }
-            });
-
-            // Calculamos el promedio
-            const promedio = count > 0 ? suma / count : 0;
-
-            // Determinamos la letra correspondiente al promedio
-            let letraResultado = '';
-            if (promedio >= 97) {
-                letraResultado = 'A+';
-            } else if (promedio >= 93) {
-                letraResultado = 'A';
-            } else if (promedio >= 90) {
-                letraResultado = 'A-';
-            } else if (promedio >= 87) {
-                letraResultado = 'B+';
-            } else if (promedio >= 83) {
-                letraResultado = 'B';
-            } else if (promedio >= 80) {
-                letraResultado = 'B-';
-            } else if (promedio >= 77) {
-                letraResultado = 'C+';
-            } else if (promedio >= 73) {
-                letraResultado = 'C';
-            } else if (promedio >= 70) {
-                letraResultado = 'C-';
-            } else if (promedio >= 67) {
-                letraResultado = 'D+';
-            } else if (promedio >= 60) {
-                letraResultado = 'D';
-            } else if (promedio >= 50) {
-                letraResultado = 'D-';
-            } else {
-                letraResultado = 'F';
             }
 
-            // Mostramos el resultado en la celda de "Total"
-            const celdaTotal = fila.querySelector('td.examen');
-            celdaTotal.textContent = letraResultado || 'Sin datos';
+            if (notas.length > 0) {
+                let promedio = notas.reduce((a, b) => a + b, 0) / notas.length;
+                celdas[6].textContent = promedio.toFixed(2);  // Mostrar resultado en la columna "examen"
+            }
         });
-    }
+    });
 
-    // Llamar a la función después de cargar la página
-    document.addEventListener('DOMContentLoaded', calcularTotal);
+  // Codigo para lo que son los campos de la class examen  para las letras
+
+  document.addEventListener("DOMContentLoaded", function() {
+    let filas = document.querySelectorAll("#exam tbody tr");
+
+    filas.forEach(fila => {
+        let examenCelda = fila.querySelector(".examen");
+        let letraCelda = fila.querySelector(".letra");
+
+        let examenValor = parseFloat(examenCelda.textContent.trim());
+
+        if (!isNaN(examenValor)) {
+            let letra;
+
+            if (examenValor >= 9.5 && examenValor <= 10.00) {
+                letra = "A";
+            } else if (examenValor >= 9.00 && examenValor < 9.50) {
+                letra = "A-";
+            } else if (examenValor >= 8.00 && examenValor <= 8.99) {
+                letra = "B+";
+            } else if (examenValor >= 7.50 && examenValor < 8) {
+                letra = "B";
+            } else if (examenValor >= 6.50 && examenValor < 7.00) {
+                letra = "C";
+            } else if (examenValor >= 7.00 && examenValor < 7.50) {
+                letra = "C+";
+            } else if (examenValor >= 5.00 && examenValor < 6.50) {
+                letra = "F";
+            } else {
+                letra = "Sin letra";
+            }
+
+
+            letraCelda.textContent = letra;
+        }
+    });
+});
 
 </script>
 <script>
+    // Codigo para la tabla homework este codigo es para lo que es sacar el promedio de los trabajos
+
+    document.addEventListener("DOMContentLoaded", function() {
+    let filas = document.querySelectorAll("#homework tbody tr");
+
+    filas.forEach(fila => {
+        let notas = [];
+        let celdas = fila.querySelectorAll("td");
+
+        for (let i = 3; i <= 6; i++) {  // Índices de las celdas con las notas
+            let valor = celdas[i].textContent.trim();
+            if (valor !== "") {  // Asegurar que la celda no esté vacía
+                notas.push(parseFloat(valor));
+            }
+        }
+
+        if (notas.length > 0) {
+            let promedio = notas.reduce((a, b) => a + b, 0) / notas.length;
+            celdas[7].textContent = promedio.toFixed(2);  // Mostrar resultado en la columna "deberes"
+        }
+    });
+});
+
+// COdigo para lo que es la class deber
+
+document.addEventListener("DOMContentLoaded", function() {
+    let filas = document.querySelectorAll("#homework tbody tr");
+
+    filas.forEach(fila => {
+        let examenCelda = fila.querySelector(".deberes");
+        let letraCelda = fila.querySelector(".letra");
+
+        let examenValor = parseFloat(examenCelda.textContent.trim());
+
+        if (!isNaN(examenValor)) {
+            let letra;
+
+            if (examenValor >= 9.5 && examenValor <= 10) {
+                letra = "A";
+            } else if (examenValor >= 9 && examenValor < 9.50) {
+                letra = "A-";
+            } else if (examenValor >= 8 && examenValor <= 8.99) {
+                letra = "B+";
+            } else if (examenValor >= 7.50 && examenValor < 8) {
+                letra = "B";
+            } else if (examenValor >= 6.50 && examenValor < 7.00) {
+                letra = "C";
+            } else if (examenValor >= 7.00 && examenValor < 7.50) {
+                letra = "C+";
+            } else if (examenValor >= 5.00 && examenValor < 6.50) {
+                letra = "F";
+            } else {
+                letra = "Sin letra";
+            }
+
+
+            letraCelda.textContent = letra;
+        }
+    });
+});
+
+
+</script>
+<script>
+    // Este codigo permite lo que es para seleccionar a los estudiantes de las lista y poder visualizarlos y sacar los deberes y examenes
+
     $('#myTable').DataTable({
         "language": {
             "url": "/static/assets/js/Spanish.json"

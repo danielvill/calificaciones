@@ -33,14 +33,10 @@
     <script src="/static/assets/js/jquery-ui.js"></script>
     <!-- SELECT2 SCRIPTS -->
     <script src="/static/assets/js/select2.min.js"></script>
-
     <!-- Estos codigos son para que todo funcione como deberia ser -->
-
     <link rel="stylesheet" href="/static/assets/css/select2.min.css">
     <!-- DATATABLES STYLES -->
     <link href="/static/assets/js/dataTables/dataTables.bootstrap.css" rel="stylesheet" />
-
-
     <!-- JavaScript Files -->
     <link rel="stylesheet" href="/static/assets/css/modal.css">
     <!-- JS -->
@@ -63,11 +59,8 @@
     <script src="/static/assets/js/custom.js"></script>
     <script src="/static/assets/js/timemensaje.js"></script>
     <script src="/static/assets/js/sweetalert211.js"></script>
-
-
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
-
 <body>
     <!--  wrapper -->
     <div id="wrapper">
@@ -134,10 +127,17 @@
                         <!--end user image section-->
                     </li>
                     
-                    <li class="selected" style="background-color: white;">
-                        <a href="./in_entrada" style="color: black;"><i class="fa fa-dashboard fa-fw"></i>Entrada y salida</a>
-                    </li>
+                    
 
+                    <li>
+                        <a href="#"><i class="bi bi-door-open-fill"></i>Ingresar entrada y salida<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="./in_entrada">Entrada y salida</a>
+                            </li>
+                        </ul>
+                        <!-- second-level-items -->
+                    </li>
                     <li>
                         <a href="#"><i class="fa fa fa-users fa-fw"></i>Estudiantes<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
@@ -192,5 +192,4 @@
         }
     </script>
 </body>
-
 </html>

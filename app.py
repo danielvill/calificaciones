@@ -142,7 +142,7 @@ def mostrar_notas():
         materias[materia_nombre]["profesor"] = doc["profesor"]
         materias[materia_nombre]["notas"][doc["bimestre"]] = doc["nota"]
     
-    # Agrupar tareas por materia y tipo de deber
+    # Agrupar tareas por materia y deber de deber
     tareas_agrupadas = defaultdict(lambda: {
         "profesor": "",
         "notas": {
@@ -154,7 +154,7 @@ def mostrar_notas():
     })
     
     for doc in tareas:
-        clave = f"{doc['materias']} - {doc['deber']}"  # Agrupa por materia y tipo de deber
+        clave = f"{doc['materias']} - {doc['deber']}"  # Agrupa por materia y deber de deber
         tareas_agrupadas[clave]["profesor"] = doc["profesor"]
         tareas_agrupadas[clave]["notas"][doc["bimestre"]] = doc["nota"]
     
@@ -187,22 +187,47 @@ def generate_pdf():
         return redirect(url_for('index'))
 
     usuario = session['username']
-    resultados = db.resultado.find({"cedula": usuario})
-    datos = []
-
+    
+    # Obtener datos de ambas colecciones
+    resultados = list(db.resultado.find({"cedula": usuario}))
+    tareas = list(db.tareas.find({"cedula": usuario}))
+    
+    # Verificar si hay datos
+    if not resultados:
+        flash("No hay calificaciones disponibles")
+        return redirect(url_for('dashboard'))
+    
+    # Organizar datos de exámenes por materia y bimestre
+    materias_exam = {}
     for resultado in resultados:
-        datos.append({
-            "cedula": resultado["cedula"],
-            "nombre": resultado["nombre"],
-            "apellido": resultado["apellido"],
-            "paralelo": resultado["paralelo"],
-            "n_año": resultado["n_año"],
-            "materia": resultado["materias"],
-            "nota": resultado["nota"],
-            "profesor": resultado["profesor"],
-            "bimestre": resultado["bimestre"]
-        })
-
+        materia = resultado["materias"]
+        bimestre = resultado["bimestre"]
+        
+        if materia not in materias_exam:
+            materias_exam[materia] = {
+                "profesor": resultado["profesor"],
+                "notas": {"1 Trimestre": "", "2 Trimestre": "", "3 Trimestre": "", "4 Trimestre": ""}
+            }
+        
+        materias_exam[materia]["notas"][bimestre] = resultado["nota"]
+    
+    # Organizar datos de tareas por materia, deber y bimestre
+    materias_tareas = {}
+    for tarea in tareas:
+        materia = tarea["materias"]
+        deber = tarea["deber"]
+        bimestre = tarea["bimestre"]
+        clave = f"{materia} - {deber}"
+        
+        if clave not in materias_tareas:
+            materias_tareas[clave] = {
+                "profesor": tarea["profesor"],
+                "notas": {"1 Trimestre": "", "2 Trimestre": "", "3 Trimestre": "", "4 Trimestre": ""}
+            }
+        
+        materias_tareas[clave]["notas"][bimestre] = tarea["nota"]
+    
+    # Crear PDF
     pdf_filename = f"{usuario}_notas.pdf"
     c = canvas.Canvas(pdf_filename, pagesize=letter)
     ancho, alto = letter
@@ -214,35 +239,137 @@ def generate_pdf():
     c.drawString(30, alto - 60, "ESCUELA PRIMARIA NO. 1234")
 
     # Información del estudiante
-    c.drawString(30, alto - 90, f"Cedula: {datos[0]['cedula']}")
-    c.drawString(30, alto - 110, f"Nombre: {datos[0]['nombre']}")
-    c.drawString(30, alto - 130, f"Apellido: {datos[0]['apellido']}")
-    c.drawString(30, alto - 150, f"Paralelo: {datos[0]['paralelo']}")
-    c.drawString(30, alto - 170, f"Año lectivo: {datos[0]['n_año']}")
-
-    # Tabla de materias y notas
-    c.setFont("Helvetica-Bold", 12)
-    c.drawString(30, alto - 200, "MATERIAS")
-    c.drawString(150, alto - 200, "PROFESOR")
-    bimestres = ["1 Trimestre", "2 Trimestre", "3 Trimestre", "4 Trimestre"]
-    x_offset = 300  # Posición inicial para los bimestres
-    for bimestre in bimestres:
-        c.drawString(x_offset, alto - 200, bimestre)
-        x_offset += 80  # Espacio entre columnas de bimestres
-
-    # Datos de las materias
+    if resultados:
+        c.drawString(30, alto - 90, f"Cedula: {resultados[0]['cedula']}")
+        c.drawString(30, alto - 110, f"Nombre: {resultados[0]['nombre']}")
+        c.drawString(30, alto - 130, f"Apellido: {resultados[0]['apellido']}")
+        c.drawString(30, alto - 150, f"Paralelo: {resultados[0]['paralelo']}")
+        c.drawString(30, alto - 170, f"Año lectivo: {resultados[0]['n_año']}")
+    
+    y_position = alto - 200
+    
+    # Tabla de exámenes
+    c.setFont("Helvetica-Bold", 14)
+    c.drawString(30, y_position, "CALIFICACIONES DE EXÁMENES")
+    y_position -= 30
+    
+    # Cabecera de la tabla de exámenes
+    c.setFont("Helvetica-Bold", 10)
+    c.drawString(30, y_position, "MATERIA")
+    c.drawString(120, y_position, "PROFESOR")
+    c.drawString(220, y_position, "1 TRIM")
+    c.drawString(270, y_position, "2 TRIM")
+    c.drawString(320, y_position, "3 TRIM")
+    c.drawString(370, y_position, "4 TRIM")
+    c.drawString(440, y_position, "RESULTADO")
+    
+    # Línea horizontal bajo el encabezado
+    y_position -= 10
+    c.line(30, y_position, 520, y_position)
+    y_position -= 15
+    
+    # Datos de exámenes
     c.setFont("Helvetica", 10)
-    y_offset = alto - 220  # Posición inicial para los datos
-    for dato in datos:
-        c.drawString(30, y_offset, dato['materia'])
-        c.drawString(150, y_offset, dato['profesor'])
-        x_offset = 300  # Reiniciar posición para las notas
-        for bimestre in bimestres:
-            if dato['bimestre'] == bimestre:
-                c.drawString(x_offset, y_offset, str(dato['nota']))
-            x_offset += 100  # Espacio entre columnas de notas
-        y_offset -= 20  # Espacio entre filas
-
+    for materia, info in materias_exam.items():
+        # Calcular el resultado promediando las notas disponibles
+        notas_disponibles = [float(nota) for nota in info["notas"].values() if nota != ""]
+        resultado = sum(notas_disponibles) / len(notas_disponibles) if notas_disponibles else 0
+        resultado_formateado = f"{resultado:.2f}"
+        
+        c.drawString(30, y_position, materia)
+        c.drawString(120, y_position, info["profesor"])
+        c.drawString(220, y_position, str(info["notas"]["1 Trimestre"]))
+        c.drawString(270, y_position, str(info["notas"]["2 Trimestre"]))
+        c.drawString(320, y_position, str(info["notas"]["3 Trimestre"]))
+        c.drawString(370, y_position, str(info["notas"]["4 Trimestre"]))
+        c.drawString(440, y_position, resultado_formateado)
+        
+        y_position -= 20
+        
+        # Si estamos llegando al final de la página, crear una nueva
+        if y_position < 100:
+            c.showPage()
+            y_position = alto - 50
+    
+    # Espacio entre tablas
+    y_position -= 30
+    
+    # Tabla de tareas
+    c.setFont("Helvetica-Bold", 14)
+    c.drawString(30, y_position, "CALIFICACIONES DE TAREAS")
+    y_position -= 30
+    
+    # Cabecera de la tabla de tareas
+    c.setFont("Helvetica-Bold", 10)
+    c.drawString(30, y_position, "MATERIA")
+    c.drawString(100, y_position, "deber")
+    c.drawString(150, y_position, "PROFESOR")
+    c.drawString(220, y_position, "1 TRIM")
+    c.drawString(270, y_position, "2 TRIM")
+    c.drawString(320, y_position, "3 TRIM")
+    c.drawString(370, y_position, "4 TRIM")
+    c.drawString(440, y_position, "RESULTADO")
+    
+    # Línea horizontal bajo el encabezado
+    y_position -= 10
+    c.line(30, y_position, 520, y_position)
+    y_position -= 15
+    
+    # Si no hay espacio suficiente, crear una nueva página
+    if y_position < 150:
+        c.showPage()
+        y_position = alto - 50
+        
+        # Encabezado de la nueva página
+        c.setFont("Helvetica-Bold", 14)
+        c.drawString(30, y_position, "CALIFICACIONES DE TAREAS")
+        y_position -= 30
+        
+        # Cabecera de la tabla de tareas
+        c.setFont("Helvetica-Bold", 10)
+        c.drawString(30, y_position, "MATERIA")
+        c.drawString(100, y_position, "deber")
+        c.drawString(150, y_position, "PROFESOR")
+        c.drawString(220, y_position, "1 TRIM")
+        c.drawString(270, y_position, "2 TRIM")
+        c.drawString(320, y_position, "3 TRIM")
+        c.drawString(370, y_position, "4 TRIM")
+        c.drawString(440, y_position, "RESULTADO")
+        
+        # Línea horizontal bajo el encabezado
+        y_position -= 10
+        c.line(30, y_position, 520, y_position)
+        y_position -= 15
+    
+    # Datos de tareas
+    c.setFont("Helvetica", 10)
+    if materias_tareas:
+        for clave, info in materias_tareas.items():
+            materia, deber = clave.split(" - ")
+            
+            # Calcular el resultado promediando las notas disponibles
+            notas_disponibles = [float(nota) for nota in info["notas"].values() if nota != ""]
+            resultado = sum(notas_disponibles) / len(notas_disponibles) if notas_disponibles else 0
+            resultado_formateado = f"{resultado:.2f}"
+            
+            c.drawString(30, y_position, materia)
+            c.drawString(100, y_position, deber)
+            c.drawString(150, y_position, info["profesor"])
+            c.drawString(220, y_position, str(info["notas"]["1 Trimestre"]))
+            c.drawString(270, y_position, str(info["notas"]["2 Trimestre"]))
+            c.drawString(320, y_position, str(info["notas"]["3 Trimestre"]))
+            c.drawString(370, y_position, str(info["notas"]["4 Trimestre"]))
+            c.drawString(440, y_position, resultado_formateado)
+            
+            y_position -= 20
+            
+            # Si estamos llegando al final de la página, crear una nueva
+            if y_position < 100:
+                c.showPage()
+                y_position = alto - 50
+    else:
+        c.drawString(30, y_position, "No hay tareas disponibles.")
+    
     # Guardar y enviar el PDF
     c.save()
     return send_file(pdf_filename, as_attachment=True)

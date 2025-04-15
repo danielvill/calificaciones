@@ -220,7 +220,7 @@ def profetarea():
     
     if not profesor:
         flash("Profesor no encontrado")
-        return redirect(url_for('profesores.index'))
+        return redirect(url_for('profesores.profetarea'))
     
     tareas = db['tareas'].find(
         {
@@ -352,34 +352,43 @@ def v_examen():
     return render_template("profesor/examen.html", resultado=resultado,materia = materia)
 
 
-# Editar calificaciones 
+# Editar Tareas 
 @profesores.route('/edit_procali/<string:edcal>', methods=['GET', 'POST'])#
 def edit_procali(edcal):
-    resultado = db['resultado']
+    tarea = db['tareas']
     cedula = request.form["cedula"]
     nombre = request.form["nombre"]
     apellido = request.form["apellido"]
+    paralelo = request.form["paralelo"]
     n_año = request.form["n_año"]
     deber = request.form["deber"]
     materias = request.form["materias"]
     bimestre = request.form ["bimestre"]
     nota = request.form["nota"]
-    if  cedula and nombre and apellido and n_año and deber and materias and bimestre  and nota:
-        resultado.update_one({'id_resultado' : edcal}, {'$set' : { "cedula":cedula,"nombre":nombre ,"apellido":apellido , "n_año":n_año,  "deber":deber, "materias":materias, "bimestre":bimestre,"nota":nota}})
+    if  cedula and nombre and apellido and paralelo and n_año and deber and materias and bimestre  and nota:
+        tarea.update_one({'id_resultado' : edcal}, {'$set' : { "cedula":cedula,"nombre":nombre ,"apellido":apellido ,"paralelo":paralelo  , "n_año":n_año,  "deber":deber, "materias":materias, "bimestre":bimestre,"nota":nota}})
         flash("Calificacion editada correctamente " ,"success")
         return redirect(url_for('profesores.profetarea'))
     else:
         return render_template('profesor/calificacion.html')
 
-# Editar Examen
+# Editar Examenes
 @profesores.route('/edit_proexa/<string:edexa>', methods=['GET', 'POST'])#
 def edit_proexa(edexa):
-    tarea = db['tarea']
-    
+    resultado = db["resultado"]
+    cedula = request.form["cedula"]
+    nombre = request.form["nombre"]
+    apellido = request.form["apellido"]
+    paralelo = request.form["paralelo"]
+    n_año = request.form["n_año"]
+    fecha_creacion = request.form["fecha_creacion"]
+    materias = request.form["materias"]
+    bimestre = request.form ["bimestre"]
     nota = request.form["nota"]
-    if nota:
-        tarea.update_one({'id_resultado' : edexa}, {'$set' : { "nota":nota }})
-        flash("Examen editado correctamente " ,"success")
+
+    if cedula  and nombre and apellido and paralelo  and n_año  and fecha_creacion and materias and bimestre  and nota:
+        resultado.update_one ({"id_resultado":edexa},{"$set":{"cedula":cedula,"nombre":nombre ,"apellido":apellido , "paralelo":paralelo, "n_año":n_año,  "fecha_creacion":fecha_creacion, "materias":materias, "bimestre":bimestre,"nota":nota}})
+        flash("Editado correctamente " ,"success")
         return redirect(url_for('profesores.v_examen'))
     else:
         return render_template('profesor/examen.html')

@@ -55,7 +55,7 @@ def chat():
         # Procesar la pregunta del usuario
         elif user_input == "muestra a los estudiantes con calificaciones mayores":
             # Consulta para obtener los estudiantes con calificaciones mayores o iguales a "A"
-            mayores = db['resultado'].find({"nota": {"$in": ["A", "A+", "A-","B","B+","B-"]}})
+            mayores = db['resultado'].find({"nota": {"$in": ["10", "9.50", "9.60","9","8","8.50","8.60","8.70"]}})
             
             # Convertir los resultados a una lista para pasarlos a la plantilla
             mayores_list = list(mayores)
@@ -64,7 +64,7 @@ def chat():
         
         elif user_input == "muestra a los estudiantes con calificaciones menores":
             # Consulta para obtener los estudiantes con calificaciones menores a "C"
-            menores = db['resultado'].find({"nota": {"$in": ["C", "C+", "C-","D","D+","D-","F","F+","F-"]}})
+            menores = db['resultado'].find({"nota": {"$in": ["7.50", "7.60","7","6","6.50","6.60","6.70","5","5.50","5.60","5.70"]}})
             # Convertir los resultados a una lista para pasarlos a la plantilla
             menores_list = list(menores)
             print(menores_list)
