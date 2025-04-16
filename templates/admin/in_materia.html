@@ -38,10 +38,13 @@
             <div class="row">
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <form action="/admin/in_materia" method="post">
-                        <div class="form-group has-success">
+                        <div class="form-group has-success crear">
                             <label class="control-label" for="inputSuccess">Nombre de la materia</label>
                             <input type="text" name="n_materia" class="form-control" id="inputSuccess" required>
                         </div>
+                        <button class="btn btn-success bi bi-plus-circle" type="button" id="add-materia">
+                            
+                        </button>
                         <div class="form-group has-success">
                             <label class="control-label" for="inputSuccess">Fecha de ingresado de los datos</label>
                             <input type="date" name="fecha_creacion" class="form-control" id="inputSuccess" required>
@@ -65,4 +68,56 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Modificar el input original para usar notación de array
+    const originalInput = document.querySelector('input[name="n_materia"]');
+    originalInput.setAttribute('name', 'n_materia[]');
+    
+    // Obtener referencia al botón de añadir
+    const addButton = document.getElementById('add-materia');
+    
+    // Añadir evento de clic al botón
+    addButton.addEventListener('click', function() {
+        // Obtener el contenedor donde se encuentra el botón
+        const parentElement = addButton.parentElement;
+        
+        // Crear un nuevo div con la misma estructura que el original
+        const newDiv = document.createElement('div');
+        newDiv.className = 'form-group has-success crear';
+        
+        // Crear el label
+        const newLabel = document.createElement('label');
+        newLabel.className = 'control-label';
+        newLabel.setAttribute('for', 'inputSuccess');
+        newLabel.textContent = 'Nombre de la materia';
+        
+        // Crear el input con notación de array en el name
+        const newInput = document.createElement('input');
+        newInput.type = 'text';
+        newInput.className = 'form-control';
+        newInput.setAttribute('name', 'n_materia[]');
+        newInput.setAttribute('id', 'inputSuccess');
+        newInput.required = true;
+        
+        // Crear botón para eliminar este input
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'btn btn-danger bi bi-trash';
+        deleteButton.type = 'button';
+        deleteButton.textContent = '';
+        deleteButton.addEventListener('click', function() {
+            newDiv.remove();
+        });
+        
+        // Añadir todos los elementos al nuevo div
+        newDiv.appendChild(newLabel);
+        newDiv.appendChild(newInput);
+        newDiv.appendChild(deleteButton);
+        
+        // Insertar el nuevo div antes del botón "Añadir"
+        parentElement.insertBefore(newDiv, addButton);
+    });
+});
+</script>
 {% endblock %}

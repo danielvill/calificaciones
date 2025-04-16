@@ -47,7 +47,7 @@
                             <label class="control-label" for="inputSuccess">Nombre del profesor</label>
                             <input name="nombre" type="text" class="form-control" id="inputSuccess" required>
                         </div>
-                        <div class="form-group has-success">
+                        <div class="form-group has-success crear">
                             <label class="control-label" for="inputSuccess">Materias asignadas</label>
                             <select name="n_materia" class="form-control" required>
                                 {% for mat in materia %}
@@ -55,6 +55,11 @@
                                 {% endfor %}
                             </select>
                         </div>
+                        <button class="btn btn-success bi bi-plus-circle" type="button" id="add-materia">
+                            
+                        </button>
+                        <br>
+                        <br>
                         <div class="form-group has-success">
                             <label class="control-label" for="inputSuccess">Paralelo asignado</label>
                             <select name="cursos" id="cursos" class="form-control">
@@ -103,4 +108,64 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Modificar el select original para usar notación de array
+    const originalSelect = document.querySelector('select[name="n_materia"]');
+    originalSelect.setAttribute('name', 'n_materia[]');
+    
+    // Obtener referencia al botón de añadir
+    const addButton = document.getElementById('add-materia');
+    
+    // Añadir evento de clic al botón
+    addButton.addEventListener('click', function() {
+        // Obtener el contenedor donde se encuentra el botón
+        const parentElement = addButton.parentElement;
+        
+        // Crear un nuevo div con la misma estructura que el original
+        const newDiv = document.createElement('div');
+        newDiv.className = 'form-group has-success crear';
+        
+        // Crear el label
+        const newLabel = document.createElement('label');
+        newLabel.className = 'control-label';
+        newLabel.setAttribute('for', 'inputSuccess');
+        newLabel.textContent = 'Materias asignadas';
+        
+        // Crear el select con notación de array en el name
+        const newSelect = document.createElement('select');
+        newSelect.className = 'form-control';
+        newSelect.setAttribute('name', 'n_materia[]');
+        newSelect.required = true;
+        
+        // Clonar las opciones del primer select
+        const options = originalSelect.querySelectorAll('option');
+        
+        options.forEach(function(option) {
+            const newOption = document.createElement('option');
+            newOption.value = option.value;
+            newOption.textContent = option.textContent;
+            newSelect.appendChild(newOption);
+        });
+        
+        // Crear botón para eliminar este select
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'btn btn-danger bi bi-trash';
+        deleteButton.type = 'button';
+        deleteButton.textContent = '';
+        deleteButton.addEventListener('click', function() {
+            newDiv.remove();
+        });
+        
+        // Añadir todos los elementos al nuevo div
+        newDiv.appendChild(newLabel);
+        newDiv.appendChild(newSelect);
+        newDiv.appendChild(deleteButton);
+        
+        // Insertar el nuevo div antes del botón "Añadir"
+        parentElement.insertBefore(newDiv, addButton);
+    });
+});
+</script>
 {% endblock %}

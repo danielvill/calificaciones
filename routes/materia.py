@@ -31,18 +31,15 @@ def admateria():
     if request.method == 'POST':
         id_materia = str(get_next_sequence('materiaId')).zfill(1)
         materia = db['materia']
-        n_materia = request.form['n_materia']
+        materias_seleccionadas = request.form.getlist('n_materia[]')
         fecha_creacion = request.form['fecha_creacion']
         
-        exist_materia = materia.find_one ({"n_materia":n_materia})
-
-        if exist_materia:
-            flash("Ya existe esa materia","danger")
-            return redirect(url_for('materia.admateria')) 
-        else:
-            materia.insert_one(Materia(id_materia, n_materia, fecha_creacion).MateriaDBCollection())
-            flash("Materia ingresada exitosamente" ,"success")
-            return redirect(url_for('materia.transicion'))
+        
+        for n_materia in materias_seleccionadas:
+            matera = Materia(id_materia, n_materia,fecha_creacion)
+            materia.insert_one(matera.MateriaDBCollection())
+        flash("Materias ingresada exitosamente" ,"success")
+        return redirect(url_for('materia.transicion'))
     else:
         return render_template("admin/in_materia.html")
 
