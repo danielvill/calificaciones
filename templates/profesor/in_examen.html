@@ -1,6 +1,41 @@
 {% extends "profesor/layout.html" %}
 {% block content %}
 <style>
+    /* Estilos para el contenedor con scroll */
+    #contenedor-calificaciones {
+        max-height: 300px;
+        /* Altura máxima del contenedor */
+        overflow-y: auto;
+        /* Agrega scrollbar vertical cuando sea necesario */
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        /* Opcional: para mejor visualización */
+        border-radius: 5px;
+    }
+
+    .cloned-fields {
+        margin-bottom: 15px;
+        /* Espacio entre grupos de campos clonados */
+        padding: 10px;
+        background-color: #f9f9f9;
+        /* Color de fondo para los campos clonados */
+        border-radius: 5px;
+        border: 1px solid #eee;
+    }
+
+    .cloned-fields hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .delete-button {
+        margin-top: 10px;
+        /* Espacio entre el último campo y el botón eliminar */
+    }
+
     .col-lg-12 {
         display: flex;
         align-items: center;
@@ -34,14 +69,23 @@
     </div>
     <!--End Page Header -->
     <div class="panel panel-default">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
         <div class="panel-body">
             <div class="row">
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <form action="/profesor/in_examen" method="post">
-                        <div class="form-group has-success"  hidden>
+                        <div class="form-group has-success" hidden>
                             <label class="control-label" for="inputSuccess">Cedula</label>
-                            <input type="text" name="cedula" class="form-control codigo" id="inputSuccess"
-                                readonly required>
+                            <input type="text" name="cedula" class="form-control codigo" id="inputSuccess" readonly
+                                required>
                         </div>
                         <div class="form-group has-success">
                             <label class="control-label" for="inputSuccess">Nombre del estudiante</label>
@@ -72,45 +116,58 @@
                         </button>
                         <br>
                         <br>
+
                         <div class="form-group has-success">
                             <label class="control-label" for="inputSuccess">Fecha del ingreso</label>
                             <input type="date" name="fecha_creacion" class="form-control" id="inputSuccess" required>
                         </div>
-                        <div class="form-group has-success">
-                            <label class="control-label" for="inputSuccess">Materia</label>
-                            <input name="materias" readonly id="materias" value="{{materi}}" class="form-control" required>
-                            </input>
+                        <!--Agregar varias calificaciones para este apartado -->
+
+                        <div id="contenedor-calificaciones">
+                            <div class="form-group has-success crear">
+                                <label class="control-label" for="inputSuccess">Materia</label>
+                                <select name="materias[]" id="materias" class="form-control" required>
+                                    <option value="" disabled selected>Seleccione la materia</option>
+                                    {% for profesor_materia in materias_profesor %}
+                                    <option value="{{ profesor_materia.n_materia }}">{{ profesor_materia.n_materia }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group has-success crear">
+                                <label class="control-label" for="inputSuccess">Trimestre</label>
+                                <select name="bimestre[]" id="bimestre" class="form-control">
+                                    <option value="1 Trimestre">1 Trimestre</option>
+                                    <option value="2 Trimestre">2 Trimestre</option>
+                                    <option value="3 Trimestre">3 Trimestre</option>
+                                    <option value="4 Trimestre">4 Trimestre</option>
+                                </select>
+                            </div>
+                            <div class="form-group has-success crear">
+                                <label class="control-label" for="inputSuccess">Calificaciones</label>
+                                <input name="nota[]" id="nota" type="number" class="form-control" required>
+
+                                </input>
+                            </div>
                         </div>
+                        <button class="btn btn-success bi bi-plus-circle" type="button" id="add-materia">
+                        </button>
+                        <br>
+                        <br>
+
+                        <!--Terminar de agregar las calificaciones -->
+
                         <div class="form-group has-success">
-                            <label class="control-label" for="inputSuccess">Trimestre</label>
-                            <select name="bimestre" id="bimestre" class="form-control">
-                                <option value="1 Trimestre">1 Trimestre</option>
-                                <option value="2 Trimestre">2 Trimestre</option>
-                                <option value="3 Trimestre">3 Trimestre</option>
-                                <option value="4 Trimestre">4 Trimestre</option>
-                            </select>
-                        </div>
-                        <div class="form-group has-success">
-                            <label class="control-label" for="inputSuccess">Ingresar Profesor</label>
+                            <label class="control-label" for="inputSuccess">Profesor encargado</label>
                             <input name="profesor" id="profesor" value="{{usuario}}" class="form-control" readonly>
+
                             </input>
                         </div>
-                        <div class="form-group has-success">
-                            <label class="control-label" for="inputSuccess">Calificaciones</label>
-                            <input type="number" name="nota" id="nota" class="form-control" required></input>
-                        </div>
+
                         <button type="submit" class="btn btn-success">Enviar</button>
                     </form>
                     <br>
-                    {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                    {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">
-                        {{ message }}
-                    </div>
-                    {% endfor %}
-                    {% endif %}
-                    {% endwith %}
+
                 </div>
             </div>
         </div>
@@ -204,5 +261,57 @@
 </script>
 
 <script src="/static/assets/js/validaciones/estudiante.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const addButton = document.getElementById('add-materia');
 
+        addButton.addEventListener('click', function () {
+            // Crear contenedor
+            const newContainer = document.createElement('div');
+            newContainer.className = 'cloned-fields';
+
+            // Clonar elementos con clase "crear"
+            const fieldsToClone = document.querySelectorAll('.form-group.has-success.crear');
+            fieldsToClone.forEach(function (field) {
+                // Clonar completamente con todos los hijos
+                const clone = field.cloneNode(true);
+
+                // Modificar nombre para procesar como array
+                const inputs = clone.querySelectorAll('input, select');
+                inputs.forEach(function (input) {
+                    if (!input.name.includes('[]')) {
+                        input.name += '[]';
+                    }
+
+
+                    // Resetear valores pero mantener opciones
+                    if (input.tagName === 'INPUT') {
+                        input.value = '';
+                    } else if (input.tagName === 'SELECT') {
+                        input.selectedIndex = 0; // Resetear al primer valor
+                    }
+                });
+
+                newContainer.appendChild(clone);
+            });
+
+            // Botón eliminar
+            const deleteBtn = document.createElement('button');
+            deleteBtn.type = 'button';
+            deleteBtn.className = 'btn btn-danger';
+            deleteBtn.textContent = 'Eliminar';
+            deleteBtn.onclick = function () { newContainer.remove(); };
+            newContainer.appendChild(deleteBtn);
+
+            // Agregar separador
+            newContainer.appendChild(document.createElement('hr'));
+
+            // Insertar en el DOM
+            addButton.parentNode.insertBefore(newContainer, addButton);
+
+            // Reaplicar funcionalidad a los select (si usas librerías como select2)
+            $(newContainer).find('select').select2();
+        });
+    });
+</script>
 {% endblock %}

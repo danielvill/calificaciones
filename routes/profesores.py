@@ -149,55 +149,95 @@ def get_next_sequence(name):
 @profesores.route("/profesor/in_calificacion", methods=['GET', 'POST'])
 def adprota():
     if 'username' not in session:
-        flash("Inicia sesion con tu usuario y contraseña")
+        flash("Inicia sesión con tu usuario y contraseña")
         return redirect(url_for('resultado.index')) 
     
-    
     # Obtener la información del profesor que ha iniciado sesión
-    
     cedula_profesor = session['username']
-    profesor = db['profesor'].find_one({'cedula': cedula_profesor})
+    profesor_actual = db['profesor'].find_one({'cedula': cedula_profesor})
     
-    if not profesor:
+    if not profesor_actual:
         flash("Profesor no encontrado")
         return redirect(url_for('profesores.index'))
     
-    # Para obtener la sesion del profesor que ingreso
-    nombre_profesor = profesor['nombre']
-    # Este para obtener la materia del profesor
-    nombre_materia = profesor['n_materia']
-
-
-    # Filtrar los estudiantes según el año y el paralelo asignados al profesor
+    nombre_profesor = profesor_actual['nombre']
+    nombre_materia = profesor_actual['n_materia']
+    
+    materias_profesor = list(db['profesor'].find({'cedula': cedula_profesor}))
     estudiantes = db['estudiante'].find({
-        'n_año': profesor['cursos'], 
-        'paralelo': profesor['año']
+        'n_año': profesor_actual['cursos'], 
+        'paralelo': profesor_actual['año']
     })
-
-
-    materia = db['materia'].find()
-    profesor = db['profesor'].find()
+    todas_materias = db['materia'].find()
+    todos_profesores = db['profesor'].find()
+    
     if request.method == 'POST':
-        id_resultado = str(get_next_sequence('resultadoId')).zfill(1)
         resultado = db['tareas']
         
-        cedula = request.form['cedula']# Este tiene que ser la cedula del estudiante
+        # Datos fijos (se repiten en todos los registros)
+        cedula = request.form['cedula']
         nombre = request.form['nombre']
         apellido = request.form['apellido']
         paralelo = request.form['paralelo']
         n_año = request.form['n_año']
-        deber = request.form['deber']
-        materias = request.form['materias']
-        bimestre = request.form ["bimestre"]
-        profesor = request.form["profesor"]
-        nota = request.form['nota']
+        profesor = request.form['profesor']  # Nombre del profesor (puede ser el mismo o diferente)
+        
+        # Datos variables (arrays)
+        deberes = request.form.getlist('deber[]')
+        materias = request.form.getlist('materias[]')
+        bimestres = request.form.getlist('bimestre[]')
+        notas = request.form.getlist('nota[]')
+        
+        # Validar que los arrays tengan la misma longitud
+        if not (len(deberes) == len(materias) == len(bimestres) == len(notas)):
+            flash("Error: Los datos enviados no son consistentes", "error")
+            return redirect(url_for('profesores.adprota'))
+        
+        # Preparar todos los documentos a insertar
+        documentos_a_insertar = []
+        for i in range(len(deberes)):
+            documento = {
+                "cedula": cedula,
+                "nombre": nombre,
+                "apellido": apellido,
+                "paralelo": paralelo,
+                "n_año": n_año,
+                "deber": deberes[i],
+                "materias": materias[i],
+                "bimestre": bimestres[i],
+                "profesor": profesor,
+                "nota": notas[i]
+            }
 
-        resultado.insert_one(Tarea(id_resultado, cedula, nombre, apellido,paralelo,n_año,deber, materias, bimestre,profesor,nota).TareadoDBCollection())
-        flash("Calificacion ingresada exitosamente","success")
+            # Verificar si ya existe un registro con los mismos datos
+            if resultado.find_one({
+                "cedula": cedula,
+                "materias": materias[i],
+                "bimestre": bimestres[i],
+                "deber": deberes[i]  # Incluimos el tipo de deber en la verificación
+            }):
+                flash(f"Advertencia: Ya existe una calificación para {nombre} en {materias[i]}, {bimestres[i]}, {deberes[i]}. No se duplicará.", "warning")
+                # No se agrega el documento a la lista para insertar
+            else:
+                documentos_a_insertar.append(documento) # Solo agrega si no existe duplicado
+
+        # Insertar los documentos
+        if documentos_a_insertar:
+            resultado.insert_many(documentos_a_insertar)
+            flash(f"✅ Se guardaron {len(documentos_a_insertar)} calificaciones correctamente", "success")
+        else:
+            flash("⚠️ No se recibieron datos para guardar", "warning")
+        
         return redirect(url_for('profesores.transicion2'))
+    
     else:
-        return render_template("profesor/in_calificacion.html",materi = nombre_materia ,usuario=nombre_profesor,estudiantes = estudiantes ,materia = materia , profesor = profesor)
-
+        return render_template("profesor/in_calificacion.html", 
+                            materi=nombre_materia,
+                            usuario=nombre_profesor,
+                            estudiantes=estudiantes,
+                            materia=todas_materias,
+                            profesor=todos_profesores,
+                            materias_profesor=materias_profesor)
 # Animacion para transicion
 @profesores.route('/profe')
 def transicion2():
@@ -261,53 +301,95 @@ def proexa():
         return redirect(url_for('profesores.index')) 
     # Obtener la información del profesor que ha iniciado sesión
     
+    # Obtener la información del profesor que ha iniciado sesión
     cedula_profesor = session['username']
-    profesor = db['profesor'].find_one({'cedula': cedula_profesor})
+    profesor_actual = db['profesor'].find_one({'cedula': cedula_profesor})
     
-    if not profesor:
+    if not profesor_actual:
         flash("Profesor no encontrado")
         return redirect(url_for('profesores.index'))
     
-    # Para obtener la sesion del profesor que ingreso
-    nombre_profesor = profesor['nombre']
-    # Este para obtener la materia del profesor
-    nombre_materia = profesor['n_materia']
-
-
-    # Filtrar los estudiantes según el año y el paralelo asignados al profesor
+    nombre_profesor = profesor_actual['nombre']
+    nombre_materia = profesor_actual['n_materia']
+    
+    materias_profesor = list(db['profesor'].find({'cedula': cedula_profesor}))
     estudiantes = db['estudiante'].find({
-        'n_año': profesor['cursos'], 
-        'paralelo': profesor['año']
+        'n_año': profesor_actual['cursos'], 
+        'paralelo': profesor_actual['año']
     })
-
-    materia = db['materia'].find()
-    profesor = db['profesor'].find()
+    todas_materias = db['materia'].find()
+    todos_profesores = db['profesor'].find()
     
     if request.method == 'POST':
-        id_resultado = str(get_next_sequence('examenId')).zfill(1)
         resultado = db['resultado']
         
-        cedula = request.form['cedula']# Este tiene que ser la cedula del estudiante
+        # Datos fijos (se repiten en todos los registros)
+        cedula = request.form['cedula']
         nombre = request.form['nombre']
         apellido = request.form['apellido']
         paralelo = request.form['paralelo']
         n_año = request.form['n_año']
+        profesor = request.form['profesor']  # Nombre del profesor (puede ser el mismo o diferente)
         fecha_creacion = request.form['fecha_creacion']
-        materias = request.form['materias']
-        bimestre = request.form ["bimestre"]
-        profesor = request.form["profesor"]
-        nota = request.form['nota']
-
-        exist_materias = resultado.find_one ({"materias":materias,"nombre":nombre,"apellido":apellido,"bimestre":bimestre })
-        if exist_materias:
-            flash("Esa materia o ese bimestre con ese nombre y apellido ya ha sido registrada" ,"danger") 
-            return redirect(url_for('resultado.adresultado'))
+        
+        # Datos variables (arrays)
+        materias = request.form.getlist('materias[]')
+        bimestres = request.form.getlist('bimestre[]')
+        notas = request.form.getlist('nota[]')
+        
+        # Validar que los arrays tengan la misma longitud
+        if not (len(materias) == len(bimestres) == len(notas)):
+            flash("Error: Los datos enviados no son consistentes", "error")
+            return redirect(url_for('profesores.adprota'))
+        
+        # Preparar todos los documentos a insertar
+        documentos_a_insertar = []
+        for i in range(len(materias)):
+            # Generar un ID único para cada registro (opcional)
+            #id_resultado = str(get_next_sequence('resultadoId')).zfill(1)
+            
+            documento = {
+                #"_id": id_resultado,  # O puedes omitirlo si MongoDB genera automáticamente el ID
+                "cedula": cedula,
+                "nombre": nombre,
+                "apellido": apellido,
+                "paralelo": paralelo,
+                "n_año": n_año,
+                "fecha_creacion": fecha_creacion,
+                "materias": materias[i],
+                "bimestre": bimestres[i],
+                "profesor": profesor,  # Puede ser el mismo o diferente
+                "nota": notas[i]
+            }
+            # Verificar si ya existe un registro con los mismos datos
+            if resultado.find_one({
+                "cedula": cedula,
+                "materias": materias[i],
+                "bimestre": bimestres[i],
+                
+            }):
+                flash(f"Advertencia: Ya existe un examen para {nombre} en {materias[i]}, {bimestres[i]} . No se duplicará.", "warning")
+                # No se agrega el documento a la lista para insertar
+            else:
+                documentos_a_insertar.append(documento)
+        # Insertar todos los registros en una sola operación
+        if documentos_a_insertar:
+            resultado.insert_many(documentos_a_insertar)
+            
+            flash(f"✅ Se guardaron {len(documentos_a_insertar)} calificaciones correctamente", "success")
         else:
-            resultado.insert_one(Resultado(id_resultado, cedula, nombre, apellido,paralelo,n_año,fecha_creacion, materias, bimestre,profesor,nota).ResultadoDBCollection())
-            flash("Calificacion ingresada exitosamente","success")
-            return redirect(url_for('profesores.transicion3'))
+            flash("⚠️ No se recibieron datos para guardar", "warning")
+        
+        return redirect(url_for('profesores.transicion3'))
+    
     else:
-        return render_template("profesor/in_examen.html",materi = nombre_materia ,usuario=nombre_profesor,estudiantes = estudiantes ,materia = materia , profesor = profesor)
+        return render_template("profesor/in_examen.html", 
+                            materi=nombre_materia,
+                            usuario=nombre_profesor,
+                            estudiantes=estudiantes,
+                            materia=todas_materias,
+                            profesor=todos_profesores,
+                            materias_profesor=materias_profesor)
 
 # Animacion para transicion de examenes
 @profesores.route('/profetas')
