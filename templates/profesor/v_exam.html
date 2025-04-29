@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examenes</title>
+    <link href="/static/assets/plugins/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="/static/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="/static/assets/plugins/pace/pace-theme-big-counter.css" rel="stylesheet" />
+    <link href="/static/assets/css/style.css" rel="stylesheet" />
+    <link href="/static/assets/css/main-style.css" rel="stylesheet" />
+    <!-- JQUERY UI STYLES -->
+    <link rel="stylesheet" href="/static/assets/css/jquery-ui.css">
+    <!-- SELECT2 STYLES -->
+    <link rel="stylesheet" href="/static/assets/css/select2.min.css">
+    <!-- Page-Level CSS -->
+    <link href="/static/assets/plugins/morris/morris-0.4.3.min.css" rel="stylesheet" />
+    <!-- Animaciones  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="/static/assets/css/messegae.css">
+    <script src="/static/assets/plugins/jquery-1.10.2.js"></script>
+    <script src="/static/assets/plugins/bootstrap/bootstrap.min.js"></script>
+    <script src="/static/assets/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="/static/assets/plugins/pace/pace.js"></script>
+    <script src="/static/assets/scripts/siminta.js"></script>
+    <!-- Page-Level Plugin Scripts-->
+    <script src="/static/assets/plugins/morris/raphael-2.1.0.min.js"></script>
+    <script src="/static/assets/plugins/morris/morris.js"></script>
+    <script src="/static/assets/scripts/dashboard-demo.js"></script>
+    <!-- JQUERY UI SCRIPTS -->
+    <script src="/static/assets/js/jquery-ui.js"></script>
+    <!-- SELECT2 SCRIPTS -->
+    <script src="/static/assets/js/select2.min.js"></script>
+
+    <!-- Estos codigos son para que todo funcione como deberia ser -->
+
+    <link rel="stylesheet" href="/static/assets/css/select2.min.css">
+    <!-- DATATABLES STYLES -->
+    <link href="/static/assets/js/dataTables/dataTables.bootstrap.css" rel="stylesheet" />
+
+
+    <!-- JavaScript Files -->
+    <link rel="stylesheet" href="/static/assets/css/modal.css">
+    <!-- JS -->
+    <!-- JQUERY SCRIPTS -->
+    <script src="/static/assets/js/jquery-1.10.2.js"></script>
+    <!-- JQUERY UI SCRIPTS -->
+    <script src="/static/assets/js/jquery-ui.js"></script>
+    <!-- SELECT2 SCRIPTS -->
+    <script src="/static/assets/js/select2.min.js"></script>
+    <!-- DATATABLES SCRIPTS -->
+    <script src="/static/assets/js/dataTables/jquery.dataTables.js"></script>
+    <script src="/static/assets/js/dataTables/dataTables.bootstrap.js"></script>
+    <!-- SWEETALERT SCRIPTS -->
+    <script src="/static/assets/js/sweetalert211.js"></script>
+    <!-- BOOTSTRAP SCRIPTS -->
+    <script src="/static/assets/js/bootstrap.js"></script>
+    <!-- METISMENU SCRIPTS -->
+    <script src="/static/assets/js/jquery.metisMenu.js"></script>
+    <!-- CUSTOM SCRIPTS -->
+    <script src="/static/assets/js/custom.js"></script>
+    <script src="/static/assets/js/timemensaje.js"></script>
+    <script src="/static/assets/js/sweetalert211.js"></script>
+
+    <style>
+        body {
+            background-color: #e6f2ef;
+        }
+
+        .report-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px auto;
+            max-width: 800px;
+        }
+
+        .report-card h1 {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .report-card .header,
+        .report-card .subjects {
+            margin-top: 20px;
+        }
+
+        .report-card .header div,
+        .report-card .subjects div {
+            margin-bottom: 10px;
+        }
+
+        .report-card .subjects .subject-row {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .report-card .subjects .subject-row div {
+            flex: 1;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="report-card">
+                <h1>CALIFICACIONES</h1>
+                <h2 class="text-center">ESCUELA PRIMARIA NO. 1234</h2>
+                <div class="header">
+                    <div class="form-group row">
+                        <label for="studentCedula" class="col-sm-4 col-form-label">Cedula:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="studentCedula" value="{{ estudiante.cedula }}"
+                                readonly>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="studentName" class="col-sm-4 col-form-label">Nombre:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="studentName" value="{{ estudiante.nombre }}"
+                                readonly>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="studentLastName" class="col-sm-4 col-form-label">Apellido:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="studentLastName"
+                                value="{{ estudiante.apellido }}" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="studentParallel" class="col-sm-4 col-form-label">Paralelo:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="studentParallel"
+                                value="{{ estudiante.paralelo }}" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="studentYear" class="col-sm-4 col-form-label">Año Lectivo:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="studentYear" value="{{ estudiante.n_año }}"
+                                readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="subjects">
+                    <!-- Segunda tabla -->
+                    <!-- Segunda tabla -->
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Materia</th>
+                                <th>1 Trimestre</th>
+                                <th>2 Trimestre</th>
+                                <th>3 Trimestre</th>
+                                <th>4 Trimestre</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for deber, detalles in tareas.items() %}
+                            <tr>
+                                <td>{{ detalles.materias }}</td>
+                                {% for trimestre in ["1 Trimestre", "2 Trimestre", "3 Trimestre", "4 Trimestre"] %}
+                                <td>
+                                    {% if trimestre in detalles.trimestres %}
+                                    <form action="{{ url_for('profesores.edit_proexa') }}" method="POST"
+                                        class="form-inline">
+                                        <input type="hidden" name="cedula" value="{{ estudiante.cedula }}">
+                                        <input type="hidden" name="materias" value="{{ detalles.materias }}">
+                                        <!-- Corregido: detalles.materias en lugar de materias -->
+                                        <input type="hidden" name="bimestre" value="{{ trimestre }}">
+                                        <input type="text" name="nota" value="{{ detalles.trimestres[trimestre] }}"
+                                            class="form-control form-control-sm" style="width: 50px;">
+                                        <button type="submit" class="btn btn-sm btn-primary ml-1">✓</button>
+                                    </form>
+                                    {% else %}
+                                    N/C
+                                    {% endif %}
+                                </td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <a href="/profesor/examen" class="btn btn-success">Regresar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                "language": {
+                    "url": "/static/assets/js/Spanish.json"
+                }
+            });
+            var table = $('#myTable').DataTable();
+            //Cambio de english a spanish
+            // Funcionalidad de edición
+            table.on('click', '.editar', function () {
+                var row = $(this).closest('tr');
+                var data = table.row(row).data();
+                // Aquí puedes abrir el modal y llenar los campos del formulario con los datos del usuario
+                // Por ejemplo:
+                $('#id_resultado').val(data[0]);
+                $('#cedula').val(data[1]);
+                $('#nombre').val(data[2]);
+                $('#apellido').val(data[3]);
+                $('#paralelo').val(data[4]);
+                $('#n_año').val(data[5]);
+                $('#deber').val(data[6]);
+                $('#materias').val(data[7]);
+                $('#bimestre').val(data[8]);
+                $('#nota').val(data[9]);
+                $('#editForm').attr('action', '/edit_proexa/' + data[0]); // Recuerda que en esta parte el 0 es la posicion selectora del codigo que estas usando en este caso es 0 ya que usas la cedula
+                $('#editModal').dialog('open');
+            });
+            // Inicializar el modal
+            $('#editModal').dialog({
+                autoOpen: false,
+                modal: true,
+                buttons: [
+                    {
+                        text: 'Guardar',
+                        click: function () {
+                            $('#editForm').submit();
+                        },
+                        // Agregar una clase al botón
+                        class: 'guardar'
+                    },
+                    {
+                        text: 'Cancelar',
+                        click: function () {
+                            $(this).dialog('close');
+                        },
+                        // Agregar una clase al botón
+                        class: 'cancelar'
+                    }
+                ]
+            });
+        });
+    </script>
+</body>
+
+</html>

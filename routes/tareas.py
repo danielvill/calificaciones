@@ -28,27 +28,78 @@ def adtarea():
         return redirect(url_for('resultado.index')) 
     estudiante = db['estudiante'].find()
     materia = db['materia'].find()
-    profesor = db['profesor'].find()
+    # Obtener cédulas únicas
+    cedulas_unicas = db['profesor'].distinct("cedula")
+    # Modifica esta línea en tu ruta
+  
+    
+    # Obtener el primer registro de cada profesor
+    profesores_unicos = []
+    for cedula in cedulas_unicas:
+        prof = db['profesor'].find_one({"cedula": cedula})
+        profesores_unicos.append(prof)
+
     if request.method == 'POST':
         id_resultado = str(get_next_sequence('resultadoId')).zfill(1)
         resultado = db['tareas']
         
-        cedula = request.form['cedula']# Este tiene que ser la cedula del estudiante
+        # Datos fijos (se repiten en todos los registros)
+        cedula = request.form['cedula']
         nombre = request.form['nombre']
         apellido = request.form['apellido']
         paralelo = request.form['paralelo']
         n_año = request.form['n_año']
-        deber = request.form['deber']
-        materias = request.form['materias']
-        bimestre = request.form ["bimestre"]
-        profesor = request.form["profesor"]
-        nota = request.form['nota']
+        profesor = request.form['profesor']  # Nombre del profesor (puede ser el mismo o diferente)
+        
+        # Datos variables (arrays)
+        deberes = request.form.getlist('deber[]')
+        materias = request.form.getlist('materias[]')
+        bimestres = request.form.getlist('bimestre[]')
+        notas = request.form.getlist('nota[]')
+        
+        # Validar que los arrays tengan la misma longitud
+        if not (len(deberes) == len(materias) == len(bimestres) == len(notas)):
+            flash("Error: Los datos enviados no son consistentes", "error")
+            return redirect(url_for('tareas.adtarea'))
+        
+        # Preparar todos los documentos a insertar
+        documentos_a_insertar = []
+        for i in range(len(deberes)):
+            documento = {
+                #"_id": id_resultado,  # O puedes omitirlo si MongoDB genera automáticamente el ID
+                "cedula": cedula,
+                "nombre": nombre,
+                "apellido": apellido,
+                "paralelo": paralelo,
+                "n_año": n_año,
+                "deber": deberes[i],
+                "materias": materias[i],
+                "bimestre": bimestres[i],
+                "profesor": profesor,
+                "nota": notas[i]
+            }
 
-        resultado.insert_one(Tarea(id_resultado, cedula, nombre, apellido,paralelo,n_año,deber, materias, bimestre,profesor,nota).TareadoDBCollection())
-        flash("Calificacion ingresada exitosamente","success")
+            # Verificar si ya existe un registro con los mismos datos
+            if resultado.find_one({
+                "cedula": cedula,
+                "materias": materias[i],
+                "bimestre": bimestres[i],
+                "deber": deberes[i]  # Incluimos el tipo de deber en la verificación
+            }):
+                flash(f"Advertencia: Ya existe una calificación para {nombre} en {materias[i]}, {bimestres[i]}, {deberes[i]}. No se duplicará.", "warning")
+                # No se agrega el documento a la lista para insertar
+            else:
+                documentos_a_insertar.append(documento) # Solo agrega si no existe duplicado
+
+        # Insertar los documentos
+        if documentos_a_insertar:
+            resultado.insert_many(documentos_a_insertar)
+            flash(f"✅ Se guardaron {len(documentos_a_insertar)} calificaciones correctamente", "success")
+        else:
+            flash("⚠️ No se recibieron datos para guardar", "warning")
         return redirect(url_for('tareas.transicion'))
     else:
-        return render_template("admin/in_tarea.html",estudiante = estudiante ,materia = materia , profesor = profesor)
+        return render_template("admin/in_tarea.html",estudiante = estudiante ,materia = materia , profesor_unicos=profesores_unicos)
     
 # Animacion para transicion
 @tareas.route('/ad_tarea')

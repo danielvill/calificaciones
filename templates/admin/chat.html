@@ -170,7 +170,7 @@
                             <th>Materias asignadas</th>
                             <th>Paralelo</th>
                             <th>Año de estudio</th>
-                            <th>Fecha</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -180,8 +180,7 @@
                             <td>{{ profesor.n_materia}}</td>
                             <td>{{ profesor.cursos }}</td>
                             <td>{{ profesor.año }}</td>
-                            <td>{{ profesor.fecha_creacion }}</td>
-
+                            
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -221,7 +220,10 @@
                 {% endif %}
                 <!-- Mostrar datos de mayores -->
                 {% if mayores %}
-                <h2>Calificaciones Mayores que B:</h2>
+                <h2>Calificaciones Mayores que 8:</h2>
+                <a href="{{ url_for('chat.generar_pdf_mayores') }}" class="btn btn-success" target="_blank">Generar PDF</a>
+                <br>
+                <br>
                 <table class="table table-bordered table-hover" id="mytable5">
                     <thead>
                         <tr>
@@ -253,7 +255,10 @@
                 {% endif %}
                 <!-- Mostrar datos de menores -->
                 {% if menores %}
-                <h2>Calificaciones menores que C:</h2>
+                <h2>Calificaciones menores que 8:</h2>
+                <a href="{{ url_for('chat.generar_pdf_menores') }}" class="btn btn-success" target="_blank">Generar PDF</a>
+                <br>
+                <br>
                 <table class="table table-bordered table-hover" id="mytable6">
                     <thead>
                         <tr>

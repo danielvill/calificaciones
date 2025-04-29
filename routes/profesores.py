@@ -1,3 +1,4 @@
+from bson import ObjectId
 from flask import Blueprint, render_template, request, flash, session, redirect, url_for
 from controllers.database import Conexion as dbase
 from modules.profesores import Profesores
@@ -252,8 +253,9 @@ def prota():
 @profesores.route("/profesor/calificacion")
 def profetarea():
     if 'username' not in session:
-        flash("Inicia sesion con tu usuario y contraseña")
+        flash("Inicia sesión con tu usuario y contraseña")
         return redirect(url_for('profesores.index'))
+
     # Obtener la información del profesor que ha iniciado sesión
     cedula_profesor = session['username']
     profesor = db['profesor'].find_one({'cedula': cedula_profesor})
@@ -262,20 +264,89 @@ def profetarea():
         flash("Profesor no encontrado")
         return redirect(url_for('profesores.profetarea'))
     
-    tareas = db['tareas'].find(
+    # Obtener las tareas y eliminar duplicados por estudiante
+    tareas_cursor = db['tareas'].find(
         {
             'n_año': profesor['cursos'], 
             'paralelo': profesor['año']
         }
     )
+
+    # Usamos un diccionario para eliminar duplicados basados en la cédula del estudiante
+    estudiantes_unicos = {}
+    for tarea in tareas_cursor:
+        estudiantes_unicos[tarea['cedula']] = tarea  # Reemplaza si ya existe
+
+    # Convertimos el diccionario a una lista de tareas únicas
+    tareas = list(estudiantes_unicos.values())
+
     materia = db['materia'].find(
         {
             'n_año': profesor['cursos'], 
             'paralelo': profesor['año']
         }
     )
-    return render_template("profesor/calificacion.html", tareas=tareas,materia = materia)
+    
+    return render_template("profesor/calificacion.html", tareas=tareas, materia=materia)
 
+# Visualizar detalles del cliente por ID y que se pueda revisar 
+@profesores.route("/profesor/tareas/<id>")
+def p_cali(id):
+    if 'username' not in session:
+        flash("Inicia sesión con tu usuario y contraseña")
+        return redirect(url_for('profesores.index'))
+    
+    # Buscar todas las tareas del estudiante con la cédula proporcionada
+    tareas = list(db['tareas'].find({"cedula": id}))
+    
+    if not tareas:
+        flash("Estudiante no encontrado")
+        return redirect(url_for('profesores.profetarea'))  # Cambia al endpoint deseado
+
+    # Extraer datos únicos del estudiante (usamos el primer registro)
+    estudiante_unico = {
+        "cedula": tareas[0]["cedula"],
+        "nombre": tareas[0]["nombre"],
+        "apellido": tareas[0]["apellido"],
+        "paralelo": tareas[0]["paralelo"],
+        "n_año": tareas[0]["n_año"],
+    }
+
+    # Agrupar las tareas por "deber" y organizar notas por trimestre
+    tareas_por_trimestre = {}
+    for tarea in tareas:
+        deber = tarea["deber"]
+        if deber not in tareas_por_trimestre:
+            tareas_por_trimestre[deber] = {"materias": tarea["materias"], "profesor": tarea["profesor"], "trimestres": {}}
+        
+        # Añadir nota según el trimestre
+        tareas_por_trimestre[deber]["trimestres"][tarea["bimestre"]] = tarea["nota"]
+
+    return render_template("profesor/v_califi.html", tareas=tareas_por_trimestre, estudiante=estudiante_unico)
+
+# Parte para editar calificaciones 
+# Editar Tareas 
+@profesores.route('/edit_procali/', methods=['POST'])
+def edit_procali():
+    if 'username' not in session:
+        flash("Inicia sesión con tu usuario y contraseña")
+        return redirect(url_for('profesores.index'))
+    
+    cedula = request.form["cedula"]
+    deber = request.form["deber"]
+    bimestre = request.form["bimestre"]
+    nueva_nota = request.form["nota"]
+    
+    if cedula and deber and bimestre and nueva_nota:
+        db['tareas'].update_one(
+            {"cedula": cedula, "deber": deber, "bimestre": bimestre},
+            {'$set': {"nota": nueva_nota}}
+        )
+        flash("Calificación editada correctamente", "success")
+        return redirect(url_for('profesores.p_cali', id=cedula))
+    else:
+        flash("Datos incompletos", "error")
+        return redirect(url_for('profesores.p_cali', id=cedula))
 
 # Parte del codigo que necesito para agregar examen
 
@@ -419,10 +490,21 @@ def v_examen():
         return redirect(url_for('profesores.index'))
     
     # Filtrar los estudiantes según el año y el paralelo asignados al profesor
-    resultado = db['resultado'].find({
+    resultado_cursos = db['resultado'].find({
         'n_año': profesor['cursos'], 
         'paralelo': profesor['año']
     })
+    
+    # Usamos un diccionario para eliminar duplicados basados en la cédula del estudiante
+    estudiantes_unicos = {}
+    for resultado in resultado_cursos:
+        estudiantes_unicos[resultado['cedula']] = resultado  # Reemplaza si ya existe
+
+    # Convertimos el diccionario a una lista de tareas únicas
+    resultado = list(estudiantes_unicos.values())
+
+    
+    
     
     materia = db['materia'].find(
         {
@@ -434,43 +516,64 @@ def v_examen():
     return render_template("profesor/examen.html", resultado=resultado,materia = materia)
 
 
-# Editar Tareas 
-@profesores.route('/edit_procali/<string:edcal>', methods=['GET', 'POST'])#
-def edit_procali(edcal):
-    tarea = db['tareas']
-    cedula = request.form["cedula"]
-    nombre = request.form["nombre"]
-    apellido = request.form["apellido"]
-    paralelo = request.form["paralelo"]
-    n_año = request.form["n_año"]
-    deber = request.form["deber"]
-    materias = request.form["materias"]
-    bimestre = request.form ["bimestre"]
-    nota = request.form["nota"]
-    if  cedula and nombre and apellido and paralelo and n_año and deber and materias and bimestre  and nota:
-        tarea.update_one({'id_resultado' : edcal}, {'$set' : { "cedula":cedula,"nombre":nombre ,"apellido":apellido ,"paralelo":paralelo  , "n_año":n_año,  "deber":deber, "materias":materias, "bimestre":bimestre,"nota":nota}})
-        flash("Calificacion editada correctamente " ,"success")
-        return redirect(url_for('profesores.profetarea'))
-    else:
-        return render_template('profesor/calificacion.html')
+# Visualizacion de estudiantes de los profesores de forma individual
+# Visualizar detalles del cliente por ID y que se pueda revisar 
+@profesores.route("/profesor/examen/<id>")
+def p_exam(id):
+    if 'username' not in session:
+        flash("Inicia sesión con tu usuario y contraseña")
+        return redirect(url_for('profesores.index'))
+    
+    # Buscar todas las tareas del estudiante con la cédula proporcionada
+    tareas = list(db['resultado'].find({"cedula": id}))
+    
+    if not tareas:
+        flash("Estudiante no encontrado")
+        return redirect(url_for('profesores.profetarea'))  # Cambia al endpoint deseado
+
+    # Extraer datos únicos del estudiante (usamos el primer registro)
+    estudiante_unico = {
+        "cedula": tareas[0]["cedula"],
+        "nombre": tareas[0]["nombre"],
+        "apellido": tareas[0]["apellido"],
+        "paralelo": tareas[0]["paralelo"],
+        "n_año": tareas[0]["n_año"],
+    }
+
+    # Agrupar las tareas por "deber" y organizar notas por trimestre
+    tareas_por_trimestre = {}
+    for tarea in tareas:
+        deber = tarea["materias"]
+        if deber not in tareas_por_trimestre:
+            tareas_por_trimestre[deber] = {"materias": tarea["materias"], "profesor": tarea["profesor"], "trimestres": {}}
+        
+        # Añadir nota según el trimestre
+        tareas_por_trimestre[deber]["trimestres"][tarea["bimestre"]] = tarea["nota"]
+
+    return render_template("profesor/v_exam.html", tareas=tareas_por_trimestre, estudiante=estudiante_unico)
+
+
 
 # Editar Examenes
-@profesores.route('/edit_proexa/<string:edexa>', methods=['GET', 'POST'])#
-def edit_proexa(edexa):
-    resultado = db["resultado"]
+@profesores.route('/edit_proexa/', methods=['GET', 'POST'])
+def edit_proexa():
     cedula = request.form["cedula"]
-    nombre = request.form["nombre"]
-    apellido = request.form["apellido"]
-    paralelo = request.form["paralelo"]
-    n_año = request.form["n_año"]
-    fecha_creacion = request.form["fecha_creacion"]
-    materias = request.form["materias"]
-    bimestre = request.form ["bimestre"]
-    nota = request.form["nota"]
-
-    if cedula  and nombre and apellido and paralelo  and n_año  and fecha_creacion and materias and bimestre  and nota:
-        resultado.update_one ({"id_resultado":edexa},{"$set":{"cedula":cedula,"nombre":nombre ,"apellido":apellido , "paralelo":paralelo, "n_año":n_año,  "fecha_creacion":fecha_creacion, "materias":materias, "bimestre":bimestre,"nota":nota}})
-        flash("Editado correctamente " ,"success")
-        return redirect(url_for('profesores.v_examen'))
+    materias = request.form["materias"]  # Asegúrate que coincida con el name del input
+    bimestre = request.form["bimestre"]  # "1 Trimestre", "2 Trimestre", etc.
+    nueva_nota = request.form["nota"]
+    
+    if cedula and materias and bimestre and nueva_nota:
+        # Actualiza la colección resultado en lugar de tareas
+        db['resultado'].update_one(
+            {
+                "cedula": cedula, 
+                "materias": materias, 
+                "bimestre": bimestre
+            },
+            {'$set': {"nota": nueva_nota}}
+        )
+        flash("Calificación editada correctamente", "success")
+        return redirect(url_for('profesores.p_exam', id=cedula))
     else:
-        return render_template('profesor/examen.html')
+        flash("Datos incompletos", "error")
+        return redirect(url_for('profesores.p_exam', id=cedula))    

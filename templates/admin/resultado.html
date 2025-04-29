@@ -49,16 +49,7 @@
                     <td>{{ resultado.bimestre }}</td>
                     <td>{{ resultado.nota }}</td>
                     <td>
-                        <button type="submit" class="editar btn btn-primary"
-                            style="background-color: #202020;color: white;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                <path
-                                    d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                <path fill-rule="evenodd"
-                                    d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
-                            </svg>
-                        </button>
+                        
                         <a href="{{url_for('resultado.delete_re', elire = resultado.id_resultado)}}"
                             class="eliminar btn btn-danger" style="background-color: #C9302C;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -166,7 +157,7 @@
             $('#materias').val(data[7]);
             $('#bimestre').val(data[8]);
             $('#nota').val(data[9]);
-            $('#editForm').attr('action', '/edit_re/' + data[0]); // Recuerda que en esta parte el 0 es la posicion selectora del codigo que estas usando en este caso es 0 ya que usas la cedula
+            $('#editForm').attr('action', '/edit_re/' + data[1]); // Recuerda que en esta parte el 0 es la posicion selectora del codigo que estas usando en este caso es 0 ya que usas la cedula
             $('#editModal').dialog('open');
         });
         // Inicializar el modal

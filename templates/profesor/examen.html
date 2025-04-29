@@ -23,15 +23,15 @@
             <thead>
                 <tr>
                     <th hidden>Id registro</th>
-                    <th >Cedula</th>
+                    <th>Cedula</th>
                     <th>Nombre</th>
-                    <th>Apellido</th>
+                    <th hidden>Apellido</th>
                     <th>Paralelo</th>
                     <th>Año lectivo</th>
                     <th hidden>Fecha </th>
-                    <th>Materias</th>
-                    <th>Bimestre</th>
-                    <th>Nota</th>
+                    <th hidden>Materias</th>
+                    <th hidden>Bimestre</th>
+                    <th hidden>Nota</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -39,29 +39,26 @@
                 {% for resultado in resultado %}
                 <tr>
                     <td hidden>{{ resultado.id_resultado }}</td>
-                    <td >{{ resultado.cedula }}</td>
+                    <td>{{ resultado.cedula }}</td>
                     <td>{{ resultado.nombre }}</td>
-                    <td>{{ resultado.apellido }}</td>
+                    <td hidden>{{ resultado.apellido }}</td>
                     <td>{{ resultado.paralelo }}</td>
                     <td>{{ resultado.n_año }}</td>
                     <td hidden>{{ resultado.fecha_creacion }}</td>
-                    <td>{{ resultado.materias }}</td>
-                    <td>{{ resultado.bimestre }}</td>
-                    <td>{{ resultado.nota }}</td>
+                    <td hidden>{{ resultado.materias }}</td>
+                    <td hidden>{{ resultado.bimestre }}</td>
+                    <td hidden>{{ resultado.nota }}</td>
                     <td>
-                        <button type="submit" class="editar btn btn-primary"
+                        <a href="{{ url_for('profesores.p_exam', id=resultado.cedula) }}" class=" btn btn-primary"
                             style="background-color: #202020;color: white;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                class="bi bi-file-text-fill" viewBox="0 0 16 16">
                                 <path
-                                    d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                <path fill-rule="evenodd"
-                                    d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                                    d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M5 4h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1m-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5M5 8h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1m0 2h3a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1" />
                             </svg>
-                        </button>
+                        </a>
                     </td>
                 </tr>
-                
                 {% endfor %}
             </tbody>
         </table>
@@ -74,7 +71,7 @@
                 <label for="">Id resultado</label>
                 <input type="text" id="id_resultado" name="id_resultado" class="form-control  ">
             </div>
-            <div class="col" >
+            <div class="col">
                 <label for="">Cedula</label>
                 <input type="text" id="cedula" name="cedula" class="form-control  animate__animated" readonly>
             </div>
@@ -90,32 +87,32 @@
                 <label for="rol">Paralelo</label>
                 <input type="text" id="paralelo" name="paralelo" class="form-control  animate__animated" readonly>
             </div>
-            
+
             <div class="col" hidden>
                 <label for="rol">Año lectivo</label>
                 <input type="text" id="n_año" name="n_año" class="form-control  animate__animated">
             </div>
-            
+
             <div class="col" hidden>
                 <label for="rol">Fecha de registro</label>
                 <input type="date" id="fecha_creacion" name="fecha_creacion" class="form-control  animate__animated">
             </div>
             <br>
-            <div class="col"  >
+            <div class="col">
                 <label for="rol">Materias</label>
                 <input type="text" id="materias" name="materias" class="form-control  animate__animated" readonly>
-                
+
             </div>
-            <div class="col" hidden >
+            <div class="col" hidden>
                 <label for="rol">Bimestre</label>
                 <input type="text" id="bimestre" name="bimestre" class="form-control  animate__animated" readonly>
-                
+
             </div>
             <br>
             <div class="col">
                 <label for="rol">Notas</label>
 
-                <input name="nota" id="nota" type="number" class="form-control animate__animated" >
+                <input name="nota" id="nota" type="number" class="form-control animate__animated">
                 </input>
             </div>
         </div>
