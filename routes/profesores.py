@@ -37,14 +37,16 @@ def adpro():
         id_profe = str(get_next_sequence('profeId')).zfill(1)
         profesor = db['profesor']
         nombre = request.form['nombre']
-        n_materia = request.form['n_materia']
+        materias_seleccionadas = request.form.getlist('n_materia[]')
         cursos = request.form['cursos']
         año = request.form['año']
         cedula = request.form['cedula']
         clave = request.form['clave']
 
-        profi = Profesores(id_profe,nombre,n_materia,cursos,año,cedula,clave)
-        profesor.insert_one(profi.ProfesorDBCollection())
+        for n_materia in materias_seleccionadas:
+            print (materias_seleccionadas)
+            profi = Profesores(id_profe,nombre,n_materia,cursos,año,cedula,clave)
+            profesor.insert_one(profi.ProfesorDBCollection())
         flash("Profesor Ingresado exitosamente" ,"success")
         return redirect(url_for('profesores.transicion'))
     else:
